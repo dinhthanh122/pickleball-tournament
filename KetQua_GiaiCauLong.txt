@@ -1,0 +1,40 @@
+BÁO CÁO KẾT QUẢ GIẢI ĐẤU Pickleball PCB
+=================================
+
+=== DANH SÁCH VĐV NAM ===
+1. Đào Minh Hiển (Sức mạnh: 1)
+2. Tuấn (Sức mạnh: 2)
+3. Duy (Sức mạnh: 3)
+4. Cảnh (Sức mạnh: 4)
+5. Mão (Sức mạnh: 5)
+6. Khôi (Sức mạnh: 6)
+7. Hoa (Sức mạnh: 7)
+8. Cương (Sức mạnh: 8)
+9. Long (Sức mạnh: 9)
+10. HuyNN (Sức mạnh: 10)
+11. Quân (Sức mạnh: 11)
+
+=== CÁC CẶP ĐÔI NAM-Nữ ===
+Đôi 1: Đào Minh Hiển + Linh
+Đôi 2: Tuấn + Vy
+Đôi 3: Duy + Thảo
+Đôi 4: Cảnh + Hương
+Đôi 5: Mão + Chinh
+
+=== KẾT QUẢ TRẬN ĐẤU ===
+Play-in (Đơn Nam) Trận 1: HuyNN vs Quân | 0-6, 10-6, 2-9, 0-11 => Quân THẮNG
+Play-in (Đơn Nam) Trận 2: Cương vs Long | 8-0, 10-6, 3-0 => Cương THẮNG
+Play-in (Đơn Nam) Trận 3: Khôi vs Hoa | 0-11, 10-5, 5-8, 4-3, 7-10 => Hoa THẮNG
+Vòng chính (Đơn Nam) Trận 1: Đào Minh Hiển vs Quân | 5-10, 1-11, 7-9 => Quân THẮNG
+Vòng chính (Đơn Nam) Trận 2: Tuấn vs Cương | 10-6, 3-8, 1-4, 9-1, 10-8 => Tuấn THẮNG
+Vòng chính (Đơn Nam) Trận 3: Duy vs Hoa | 11-5, 0-8, 9-11, 5-7 => Hoa THẮNG
+Vòng chính (Đơn Nam) Trận 4: Cảnh vs Mão | 10-9, 3-5, 5-9, 3-1, 9-4 => Cảnh THẮNG
+Vòng tiếp theo (Đơn Nam) Trận 1: Quân vs Tuấn | 3-8, 9-11, 4-11 => Tuấn THẮNG
+Vòng tiếp theo (Đơn Nam) Trận 2: Hoa vs Cảnh | 7-2, 5-7, 2-10, 8-9 => Cảnh THẮNG
+Chung kết (Đơn Nam) Trận 1: Tuấn vs Cảnh | 10-0, 9-7, 2-7, 8-6 => Tuấn THẮNG
+Tranh hạng 3 (Đơn Nam): Quân vs Hoa | 6-2, 2-5, 4-1, 6-2 => Quân THẮNG
+Play-in (Đôi Nam-Nữ) Trận 1: Đôi 4: Cảnh + Hương vs Đôi 5: Mão + Chinh | 9-0, 3-2, 4-8, 9-7 => Đôi 4: Cảnh + Hương THẮNG
+Vòng chính (Đôi Nam-Nữ) Trận 1: Đôi 1: Đào Minh Hiển + Linh vs Đôi 4: Cảnh + Hương | 9-11, 8-0, 8-6, 10-11, 7-0 => Đôi 1: Đào Minh Hiển + Linh THẮNG
+Vòng chính (Đôi Nam-Nữ) Trận 2: Đôi 2: Tuấn + Vy vs Đôi 3: Duy + Thảo | 7-8, 6-11, 8-3, 5-4, 1-2 => Đôi 3: Duy + Thảo THẮNG
+Chung kết (Đôi Nam-Nữ) Trận 1: Đôi 1: Đào Minh Hiển + Linh vs Đôi 3: Duy + Thảo | 10-11, 3-8, 8-7, 6-8 => Đôi 3: Duy + Thảo THẮNG
+Tranh hạng 3 (Đôi Nam-Nữ): Đôi 4: Cảnh + Hương vs Đôi 2: Tuấn + Vy | 9-11, 4-11, 11-1, 5-6 => Đôi 2: Tuấn + Vy THẮNG

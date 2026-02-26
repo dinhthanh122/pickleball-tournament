@@ -1,0 +1,1870 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giải Vô Địch Pickleball PCB</title>
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Tailwind CSS (for rapid utility classes combined with custom CSS) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --accent: #8b5cf6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Be Vietnam Pro', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            margin: 0;
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 25%);
+            background-attachment: fixed;
+            font-size: 17px;
+        }
+
+        /* Tăng nhẹ cỡ chữ mặc định của Tailwind */
+        .text-xs {
+            font-size: 0.8rem;
+        }
+
+        .text-sm {
+            font-size: 0.95rem;
+        }
+
+        .text-base {
+            font-size: 1.05rem;
+        }
+
+        .icon-pickleball {
+            display: inline-block;
+            width: 1.8em;
+            height: 1.8em;
+            object-fit: contain;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            border-radius: 1rem;
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 0.75rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Forms & Inputs */
+        .glass-input {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .glass-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-glow);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            outline: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px var(--primary-glow);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-success:hover {
+            opacity: 0.9;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-danger {
+            background: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Tabs */
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--text-main);
+            border-bottom-color: var(--glass-border);
+        }
+
+        .bracket-match-card {
+            background: rgba(30, 41, 59, 0.8) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .bracket-match-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .connector-line {
+            position: absolute;
+            border-color: rgba(255, 255, 255, 0.15);
+            border-style: solid;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .connector-horizontal {
+            border-top-width: 2px;
+            height: 0;
+        }
+
+        .connector-vertical {
+            border-left-width: 2px;
+            width: 0;
+        }
+
+        .score-box-vibrant {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 11px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .round-column {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            min-width: 200px;
+        }
+
+        .match-pair-wrapper {
+            position: relative;
+            padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* Responsive Score Input */
+        .score-input {
+            width: 32px !important;
+            height: 32px !important;
+            padding: 0 !important;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .score-input::-webkit-inner-spin-button,
+        .score-input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Bracket Styling */
+        .bracket-connector {
+            position: absolute;
+            border: 2px solid var(--glass-border);
+            z-index: 0;
+        }
+
+        .match-box {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        /* Custom match score inputs */
+        .score-input {
+            width: 3rem;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            padding: 0.25rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 0.25rem;
+            color: white;
+        }
+
+        .score-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        /* Match Schedule Framed Layout */
+        .match-team-frame {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            transition: all 0.2s;
+        }
+
+        .match-team-frame:hover {
+            border-color: var(--primary-glow);
+            background: rgba(30, 41, 59, 0.6);
+        }
+
+        .match-team-frame.winner {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .vs-divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 800;
+            margin: 0.25rem 0;
+        }
+
+        .vs-divider::before,
+        .vs-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--glass-border);
+        }
+
+        /* World Cup Style Match layout */
+        .match-card-wc {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            height: 70px;
+            position: relative;
+            overflow: visible;
+            transition: all 0.2s;
+        }
+
+        .match-card-wc:hover {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: var(--primary-glow);
+            transform: scale(1.02);
+        }
+
+        .team-box-wc {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        .team-box-left {
+            justify-content: flex-end;
+            text-align: right;
+        }
+
+        .team-box-right {
+            justify-content: flex-start;
+            text-align: left;
+        }
+
+        .vs-badge-container {
+            width: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            position: relative;
+            z-index: 20;
+        }
+
+        .vs-badge-wc {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #0f172a;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            /* Squircle */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.75rem;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transform: rotate(45deg);
+        }
+
+        .vs-badge-wc span {
+            transform: rotate(-45deg);
+        }
+
+        .match-label-wc {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-dark);
+            border: 1px solid var(--glass-border);
+            padding: 1px 12px;
+            border-radius: 20px;
+            font-size: 9px;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            z-index: 30;
+        }
+
+        .match-card-wc.winner-left {
+            border-left: 4px solid var(--success);
+        }
+
+        .match-card-wc.winner-right {
+            border-right: 4px solid var(--success);
+        }
+
+        /* --- Podium & Medalist Styles --- */
+        .podium-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 1rem;
+            padding: 2rem 0;
+            margin-top: 2rem;
+            min-height: 400px;
+        }
+
+        .podium-spot {
+            width: 140px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .podium-base {
+            width: 100%;
+            border-radius: 12px 12px 4px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 1rem;
+            font-weight: 900;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .podium-base::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        .rank-1 {
+            height: 200px;
+            order: 2;
+            z-index: 10;
+            transform: scale(1.1);
+        }
+
+        .rank-2 {
+            height: 160px;
+            order: 1;
+        }
+
+        .rank-3 {
+            height: 130px;
+            order: 3;
+        }
+
+        .rank-4 {
+            height: 100px;
+            order: 4;
+        }
+
+        .rank-1 .podium-base {
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            box-shadow: 0 0 40px rgba(217, 119, 6, 0.3);
+        }
+
+        .rank-2 .podium-base {
+            background: linear-gradient(135deg, #94a3b8, #475569);
+        }
+
+        .rank-3 .podium-base {
+            background: linear-gradient(135deg, #d97706, #92400e);
+        }
+
+        .rank-4 .podium-base {
+            background: linear-gradient(135deg, #334155, #0f172a);
+        }
+
+        .medalist-name {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            min-height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0 5px;
+        }
+
+        .medal-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+        }
+
+        @media (max-width: 768px) {
+            .podium-spot {
+                width: 100px;
+            }
+
+            .rank-1 {
+                height: 160px;
+            }
+
+            .rank-2 {
+                height: 130px;
+            }
+
+            .rank-3 {
+                height: 110px;
+            }
+
+            .rank-4 {
+                height: 80px;
+            }
+
+            .medal-icon {
+                font-size: 1.8rem;
+            }
+
+            .medalist-name {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* --- Enhanced Bracket Aesthetics --- */
+        .bracket-match-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9)) !important;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+        }
+
+        .bracket-match-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -10px rgba(59, 130, 246, 0.4);
+        }
+
+        .connector-line {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            opacity: 0.9;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .relative:hover>.connector-line {
+            opacity: 1;
+            filter: brightness(1.2);
+        }
+
+        .score-box-vibrant {
+            background: rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            font-weight: 800;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            min-width: 1.5rem;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // ─── Initial State ────────────────────────────────────────────────────────
+        const INITIAL_PLAYERS = {
+            men: [
+                { id: 'man1', name: 'Đào Minh Hiển', rank: 1 },
+                { id: 'man2', name: 'Tuấn', rank: 2 },
+                { id: 'man3', name: 'Nguyễn Khắc Duy', rank: 3 },
+                { id: 'man4', name: 'Quân', rank: 4 },
+                { id: 'man5', name: 'Dương Văn Cảnh', rank: 5 },
+                { id: 'man6', name: 'Trần Văn Mão', rank: 6 },
+                { id: 'man7', name: 'Khôi', rank: 7 },
+                { id: 'man8', name: 'HoaNN', rank: 8 },
+                { id: 'man9', name: 'Cương', rank: 9 },
+                { id: 'man10', name: 'LongDD', rank: 10 },
+                { id: 'man11', name: 'HuyNN', rank: 11 },
+            ],
+            women: [
+                { id: 'woman1', name: 'Tuyết Chinh', rank: 1 },
+                { id: 'woman2', name: 'Chị Hường', rank: 2 },
+                { id: 'woman3', name: 'Chị Thảo', rank: 3 },
+                { id: 'woman4', name: 'Vy Nguyễn', rank: 4 },
+                { id: 'woman5', name: 'Giang Thùy Linh', rank: 5 },
+            ],
+        };
+
+        // ─── Scoring & Validation ────────────────────────────────────────────────
+        const validateScore = (s1, s2) => {
+            const v1 = parseInt(s1), v2 = parseInt(s2);
+            if (isNaN(v1) || isNaN(v2) || v1 < 0 || v2 < 0) return { valid: false, msg: 'Điểm phải là số dương (>= 0)!' };
+            if (v1 === v2) return { valid: false, msg: 'Set đấu phải có người thắng (điểm không được bằng nhau)!' };
+            return { valid: true, winner: v1 > v2 ? 1 : 2 };
+        };
+
+        const buildBracket = (players, type, label) => {
+            const n = players.length;
+            if (n < 2) return { rounds: [], matches: {} };
+
+            const seeded = [...players].sort((a, b) => a.rank - b.rank);
+
+            let M = 1;
+            while (M < n) M <<= 1;
+
+            const matches = {};
+            const rounds = [];
+
+            // --- Khởi tạo vòng đầu tiên (có thể có Play-in) ---
+            if (n === M) {
+                // Trường hợp số VĐV là lũy thừa của 2 → không cần play‑in
+                const roundIds = [];
+                for (let i = 0; i < n / 2; i++) {
+                    const id = `${type}_r0_m${i}`;
+                    matches[id] = {
+                        id, type,
+                        round: "r0",
+                        roundLabel: "Vòng 1",
+                        name: `Vòng 1 (${label}) Trận ${i + 1}`,
+                        team1: seeded[i],
+                        team2: seeded[n - 1 - i],
+                        scores: [],
+                        winner: null,
+                        loser: null,
+                        nextMatchId: null,
+                        nextSlot: null
+                    };
+                    roundIds.push(id);
+                }
+                rounds.push(roundIds);
+            } else {
+                // Trường hợp không phải lũy thừa của 2 → tạo Play‑in cho các VĐV hạng thấp
+                const R1 = n - M / 2;
+                const P = 2 * R1;
+
+                const playInPlayers = seeded.slice(n - P);
+                const byePlayers = seeded.slice(0, n - P);
+
+                const playInIds = [];
+
+                for (let i = 0; i < P; i += 2) {
+                    const p1 = playInPlayers[P - 2 - i];
+                    const p2 = playInPlayers[P - 1 - i];
+                    const id = `${type}_r0_m${i / 2}`;
+
+                    matches[id] = {
+                        id, type,
+                        round: "r0",
+                        roundLabel: "Play-in",
+                        name: `Play-in (${label}) Trận ${i / 2 + 1}`,
+                        team1: p1,
+                        team2: p2,
+                        scores: [],
+                        winner: null,
+                        loser: null,
+                        nextMatchId: null,
+                        nextSlot: null
+                    };
+
+                    playInIds.push(id);
+                }
+                rounds.push(playInIds);
+
+                // Vòng chính đầu tiên (sau play‑in)
+                const mainIds = [];
+                for (let i = 0; i < M / 4; i++) {
+                    const id = `${type}_r1_m${i}`;
+                    matches[id] = {
+                        id, type,
+                        round: "r1",
+                        roundLabel: "Vòng chính",
+                        name: `Vòng chính (${label}) Trận ${i + 1}`,
+                        team1: null,
+                        team2: null,
+                        scores: [],
+                        winner: null,
+                        loser: null,
+                        nextMatchId: null,
+                        nextSlot: null
+                    };
+                    mainIds.push(id);
+                }
+                rounds.push(mainIds);
+
+                // Gán các hạt giống được bye + chỗ trống cho winner play‑in
+                const entrants = [...byePlayers, ...Array(R1).fill(null)];
+
+                for (let i = 0; i < mainIds.length; i++) {
+                    const m = matches[mainIds[i]];
+                    m.team1 = entrants[i] || null;
+                    m.team2 = entrants[entrants.length - 1 - i] || null;
+                }
+
+                // Winner của play‑in điền vào slot còn trống của vòng chính
+                playInIds.forEach((pid, idx) => {
+                    matches[pid].nextMatchId = mainIds[idx];
+                    matches[pid].nextSlot = "team2";
+                });
+            }
+
+            // --- Sinh tiếp các vòng loại trực tiếp cho tới Chung kết ---
+            let currentRoundIds = rounds[rounds.length - 1];
+            let roundIndex = rounds.length - 1;
+
+            while (currentRoundIds.length > 1) {
+                const nextRoundIds = [];
+                const isNextFinal = currentRoundIds.length === 2;
+
+                for (let i = 0; i < currentRoundIds.length; i += 2) {
+                    const m1Id = currentRoundIds[i];
+                    const m2Id = currentRoundIds[i + 1];
+
+                    const id = `${type}_r${roundIndex + 1}_m${i / 2}`;
+                    matches[id] = {
+                        id, type,
+                        round: `r${roundIndex + 1}`,
+                        roundLabel: isNextFinal ? "Chung kết" : "Vòng chính",
+                        name: `${isNextFinal ? "Chung kết" : "Vòng tiếp theo"} (${label}) Trận ${i / 2 + 1}`,
+                        team1: null,
+                        team2: null,
+                        scores: [],
+                        winner: null,
+                        loser: null,
+                        nextMatchId: null,
+                        nextSlot: null
+                    };
+
+                    // Kết nối winner từ 2 trận trước vào trận mới
+                    if (matches[m1Id]) {
+                        matches[m1Id].nextMatchId = id;
+                        matches[m1Id].nextSlot = "team1";
+                    }
+                    if (matches[m2Id]) {
+                        matches[m2Id].nextMatchId = id;
+                        matches[m2Id].nextSlot = "team2";
+                    }
+
+                    nextRoundIds.push(id);
+                }
+
+                rounds.push(nextRoundIds);
+                currentRoundIds = nextRoundIds;
+                roundIndex++;
+            }
+
+            // --- Tạo trận tranh hạng 3 (nếu có bán kết) ---
+            if (rounds.length >= 3) {
+                const semiFinalIds = rounds[rounds.length - 2];
+                if (semiFinalIds && semiFinalIds.length === 2) {
+                    const thirdId = `${type}_third`;
+                    matches[thirdId] = {
+                        id: thirdId,
+                        type,
+                        round: "third",
+                        roundLabel: "Tranh hạng 3",
+                        name: `Tranh hạng 3 (${label})`,
+                        team1: null,
+                        team2: null,
+                        scores: [],
+                        winner: null,
+                        loser: null,
+                        nextMatchId: null,
+                        nextSlot: null
+                    };
+                    // không đưa vào rounds để vẽ cột riêng trong BracketTab
+                }
+            }
+
+            return { rounds, matches };
+        };
+
+        // ─── Mixed Doubles Team Builder ───────────────────────────────────────────
+        const buildMdTeams = (men, women) => {
+            const sortedMen = [...men].sort((a, b) => a.rank - b.rank);
+            const sortedWomen = [...women].sort((a, b) => a.rank - b.rank);
+            const numTeams = sortedWomen.length;
+            const teams = [];
+            for (let i = 0; i < numTeams; i++) {
+                const man = sortedMen[i % sortedMen.length];
+                const woman = sortedWomen[sortedWomen.length - 1 - i];
+                teams.push({
+                    id: `mdteam${i + 1}`,
+                    name: `Đôi ${i + 1}: ${man.name} + ${woman.name}`,
+                    man, woman, rank: i + 1,
+                });
+            }
+            return teams;
+        };
+
+        // ─── MatchScoreCard Component ─────────────────────────────────────────────
+        // ─── MatchScoreCard Component ─────────────────────────────────────────────
+        const MatchScoreCard = ({ matchId, match, saveMatchScore }) => {
+            const MAX_SETS = 5;                      // best-of-5
+            const WIN_SETS = Math.floor(MAX_SETS / 2) + 1; // =3
+
+            const emptySetArr = () =>
+                Array.from({ length: MAX_SETS }, () => ({ s1: "", s2: "" }));
+
+            const [inputScores, setInputScores] = useState(emptySetArr());
+
+            useEffect(() => {
+                if (match?.scores?.length > 0) {
+                    const ns = emptySetArr();
+                    match.scores.forEach((s, i) => {
+                        if (i < MAX_SETS) ns[i] = { s1: String(s.s1), s2: String(s.s2) };
+                    });
+                    setInputScores(ns);
+                } else {
+                    setInputScores(emptySetArr());
+                }
+            }, [match?.scores, matchId]);
+
+            // Chưa đủ đội → show placeholder
+            if (!match?.team1 || !match?.team2) {
+                return (
+                    <div className="glass-card p-4 opacity-50 flex items-center justify-center min-h-[80px]">
+                        <span className="text-sm italic text-gray-400">
+                            {match?.name || matchId} – Chờ xác định đối thủ
+                        </span>
+                    </div>
+                );
+            }
+
+            const handleChange = (setIdx, side, val) => {
+                const ns = [...inputScores];
+                ns[setIdx] = { ...ns[setIdx], [side]: val };
+                setInputScores(ns);
+            };
+
+            // ====== TÍNH SỐ SET CẦN HIỂN THỊ (nở dần) ======
+            // Tìm set đầu tiên chưa nhập đủ
+            const firstEmptyIdx = inputScores.findIndex(
+                (s) => s.s1 === "" || s.s2 === ""
+            );
+            const filledCount = firstEmptyIdx === -1 ? MAX_SETS : firstEmptyIdx;
+
+            const played = match?.scores?.length || 0;
+
+            // Nếu đã có winner -> show đúng số set đã chơi
+            // Nếu chưa -> show (đã nhập + 1) để nhập tiếp
+            const showCount = match.winner
+                ? Math.max(played, 1)
+                : Math.min(filledCount + 1, MAX_SETS);
+
+            const visibleSetIdx = Array.from({ length: showCount }, (_, i) => i);
+
+            // Optional: hiển thị trạng thái đang thắng bao nhiêu set (nhìn nhanh)
+            const calcCurrentSetWins = () => {
+                let a = 0, b = 0;
+                for (let i = 0; i < MAX_SETS; i++) {
+                    const s = inputScores[i];
+                    if (!s || s.s1 === "" || s.s2 === "") break;
+                    const v = validateScore(s.s1, s.s2);
+                    if (!v.valid) break;
+                    if (v.winner === 1) a++;
+                    if (v.winner === 2) b++;
+                    if (a === WIN_SETS || b === WIN_SETS) break;
+                }
+                return { a, b };
+            };
+
+            const w = !match.winner ? calcCurrentSetWins() : null;
+
+            return (
+                <div
+                    className={`glass-card p-4 relative ${match.winner ? "border-success/50 bg-success/5" : ""
+                        }`}
+                >
+                    {match.winner && (
+                        <div className="absolute top-0 right-0 bg-success text-white text-xs px-2 py-1 rounded-bl-lg font-bold">
+                            KẾT THÚC
+                        </div>
+                    )}
+
+                    <h4 className="font-bold text-accent mb-3 text-sm border-b border-glass-border pb-2">
+                        {match.name}
+                    </h4>
+
+                    {!match.winner && (
+                        <div className="text-xs text-gray-300 mb-2">
+                            Tạm tính set: <b>{w.a}</b> - <b>{w.b}</b>
+                        </div>
+                    )}
+
+                    {[{ team: match.team1, side: "s1" }, { team: match.team2, side: "s2" }].map(
+                        ({ team, side }, ti) => (
+                            <div
+                                key={ti}
+                                className={`flex items-center justify-between gap-2 mb-1 ${match.winner?.id === team.id ? "text-success font-bold" : ""
+                                    }`}
+                            >
+                                <span className="text-sm flex-1 break-words whitespace-normal leading-tight pr-2">
+                                    {team.name} {match.winner?.id === team.id ? "👑" : ""}
+                                </span>
+
+                                <div className="flex gap-1 flex-wrap">
+                                    {visibleSetIdx.map((si) => (
+                                        <input
+                                            key={si}
+                                            type="number"
+                                            className="score-input"
+                                            value={inputScores[si][side]}
+                                            onChange={(e) => handleChange(si, side, e.target.value)}
+                                            disabled={!!match.winner}
+                                            placeholder="-"
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        )
+                    )}
+
+                    {!match.winner && (
+                        <div className="mt-3 flex justify-end">
+                            <button
+                                className="btn btn-success text-sm py-1"
+                                onClick={() => saveMatchScore(matchId, inputScores)}
+                            >
+                                Lưu Kết Quả
+                            </button>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // ─── SetupTab (Unified Management) ───────────────────────────────────────
+        const SetupTab = ({ players, mdTeams, initialized, handlePlayerCountChange, handlePlayerChange, initializeTournament, msData, mdData }) => {
+            const renderFramedMatch = (m) => {
+                if (!m || m.isBye || !m.team1 || !m.team2) return null;
+                const isWinner1 = m.winner?.id === m.team1.id;
+                const isWinner2 = m.winner?.id === m.team2.id;
+
+                return (
+                    <div key={m.id} className={`match-card-wc mb-5 ${isWinner1 ? 'winner-left' : ''} ${isWinner2 ? 'winner-right' : ''}`}>
+                        <div className="match-label-wc">{m.roundLabel}</div>
+
+                        {/* Team Left */}
+                        <div className={`team-box-wc team-box-left ${isWinner1 ? 'text-success' : ''}`}>
+                            <span className="break-words whitespace-normal leading-tight text-[11px] md:text-[13px]">{m.team1.name}</span>
+                            {isWinner1 && <span className="ml-2 text-xs flex-shrink-0">👑</span>}
+                        </div>
+
+                        {/* Center VS - Fixed Width Column */}
+                        <div className="vs-badge-container">
+                            <div className="vs-badge-wc">
+                                <span>VS</span>
+                            </div>
+                        </div>
+
+                        {/* Team Right */}
+                        <div className={`team-box-wc team-box-right ${isWinner2 ? 'text-success' : ''}`}>
+                            {isWinner2 && <span className="mr-2 text-xs flex-shrink-0">👑</span>}
+                            <span className="break-words whitespace-normal leading-tight text-[11px] md:text-[13px]">{m.team2.name}</span>
+                        </div>
+                    </div>
+                );
+            };
+
+            return (
+                <div className="space-y-8 animate-fade-in pb-10">
+                    {/* Part 1: Registration */}
+                    <div className="glass-panel p-6 border-t-4 border-t-primary">
+                        <h2 className="text-xl font-bold mb-1 text-primary flex items-center gap-2">
+                            <span>📝</span> Đăng Ký VĐV
+                        </h2>
+                        <p className="text-sm text-text-muted mb-5">Nhập danh sách và sức mạnh (Rank) để hệ thống tự động bốc thăm hạt giống.</p>
+
+                        <div className="grid md:grid-cols-2 gap-8">
+                            {/* Men */}
+                            <div>
+                                <div className="flex justify-between items-center mb-4">
+                                    <h3 className="text-lg font-bold text-blue-400 flex items-center gap-2">
+                                        <img src="pickleball-icon.png" alt="" className="icon-pickleball" />
+                                        <span>Danh sách Nam</span>
+                                    </h3>
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-sm font-bold text-text-muted">Số lượng:</span>
+                                        <input type="number" min="2" className="glass-input w-24 text-center py-3 text-2xl font-black text-primary border-primary/50"
+                                            value={players.men.length}
+                                            onChange={e => handlePlayerCountChange('men', e.target.value)} />
+                                    </div>
+                                </div>
+                                <div className="max-h-[300px] overflow-y-auto pr-2 space-y-2">
+                                    {players.men.map((p, i) => (
+                                        <div key={p.id} className="flex gap-2 animate-fade-in" style={{ animationDelay: `${i * 0.05}s` }}>
+                                            <input className="glass-input flex-1 text-sm" placeholder={`Tên Nam ${i + 1}`}
+                                                value={p.name} onChange={e => handlePlayerChange('men', i, 'name', e.target.value)} />
+                                            <input className="glass-input w-20 text-center text-sm" type="number" min="1" placeholder="Rank"
+                                                value={p.rank} onChange={e => handlePlayerChange('men', i, 'rank', e.target.value)} />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            {/* Women */}
+                            <div>
+                                <div className="flex justify-between items-center mb-4">
+                                    <h3 className="text-lg font-bold text-purple-400 flex items-center gap-2">
+                                        <img src="pickleball-icon.png" alt="" className="icon-pickleball" />
+                                        <span>Danh sách Nữ</span>
+                                    </h3>
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-sm font-bold text-text-muted">Số lượng:</span>
+                                        <input type="number" min="2" className="glass-input w-24 text-center py-3 text-2xl font-black text-accent border-accent/50"
+                                            value={players.women.length}
+                                            onChange={e => handlePlayerCountChange('women', e.target.value)} />
+                                    </div>
+                                </div>
+                                <div className="max-h-[300px] overflow-y-auto pr-2 space-y-2">
+                                    {players.women.map((p, i) => (
+                                        <div key={p.id} className="flex gap-2 animate-fade-in" style={{ animationDelay: `${i * 0.05}s` }}>
+                                            <input className="glass-input flex-1 text-sm" placeholder={`Tên Nữ ${i + 1}`}
+                                                value={p.name} onChange={e => handlePlayerChange('women', i, 'name', e.target.value)} />
+                                            <input className="glass-input w-20 text-center text-sm" type="number" min="1" placeholder="Rank"
+                                                value={p.rank} onChange={e => handlePlayerChange('women', i, 'rank', e.target.value)} />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-8 flex flex-col items-center gap-3">
+                            <button className="btn btn-primary px-12 py-4 text-lg shadow-[0_0_30px_rgba(59,130,246,0.3)]" onClick={initializeTournament}>
+                                🚀 KHỞI TẠO GIẢI ĐẤU TOÀN DIỆN
+                            </button>
+                            <p className="text-xs text-text-muted italic">Cập nhật toàn bộ Bracket & Lịch thi đấu theo dữ liệu mới</p>
+                        </div>
+                    </div>
+
+                    {/* Part 2: Integrated Schedule */}
+                    {initialized && (
+                        <div className="animate-fade-in">
+                            <div className="flex items-center gap-4 mb-6">
+                                <h2 className="text-2xl font-bold text-white">📅 Lịch Thi Đấu & Phân Cặp</h2>
+                                <div className="h-px flex-1 bg-gradient-to-r from-glass-border to-transparent"></div>
+                                <span className="px-3 py-1 bg-success/20 text-success text-xs font-bold rounded-full border border-success/30">✓ Đã bốc thăm</span>
+                            </div>
+
+                            <div className="grid lg:grid-cols-2 gap-8">
+                                {/* Men's Singles Column */}
+                                <div className="glass-panel p-5 bg-blue-500/5 border border-blue-500/10">
+                                    <div className="flex items-center justify-between mb-5 border-b border-blue-500/20 pb-3">
+                                        <span className="text-[10px] bg-blue-500/20 px-2 py-0.5 rounded text-blue-300">DYNAMICS</span>
+                                    </div>
+                                    <div className="space-y-4">
+                                        {Object.values(msData.matches || {})
+                                            .filter(m => !m.isBye && m.team1 && m.team2)
+                                            .sort((a, b) => {
+                                                const sA = a.round === 'third' ? 998 : (a.roundLabel === 'Chung kết' ? 999 : parseInt(a.round.slice(1)) || 0);
+                                                const sB = b.round === 'third' ? 998 : (b.roundLabel === 'Chung kết' ? 999 : parseInt(b.round.slice(1)) || 0);
+                                                return sA - sB;
+                                            })
+                                            .map(renderFramedMatch)}
+                                        {Object.values(msData.matches || {}).filter(m => !m.isBye && m.team1 && m.team2).length === 0 &&
+                                            <p className="text-sm italic text-text-muted text-center py-10">Đang chờ xác định các cặp đấu...</p>
+                                        }
+                                    </div>
+                                </div>
+
+                                {/* Mixed Doubles Column */}
+                                <div className="glass-panel p-5 bg-purple-500/5 border border-purple-500/10">
+                                    <div className="flex items-center justify-between mb-5 border-b border-purple-500/20 pb-3">
+                                        <h3 className="text-lg font-bold text-purple-400 flex items-center gap-2">
+                                            <span>🤝</span> Đôi Nam-Nữ (Mixed Doubles)
+                                        </h3>
+                                        <span className="text-[10px] bg-purple-500/20 px-2 py-0.5 rounded text-purple-300">{mdTeams.length} CẶP</span>
+                                    </div>
+                                    <div className="space-y-4">
+                                        {Object.values(mdData.matches || {})
+                                            .filter(m => !m.isBye && m.team1 && m.team2)
+                                            .sort((a, b) => {
+                                                const sA = a.round === 'third' ? 998 : (a.roundLabel === 'Chung kết' ? 999 : parseInt(a.round.slice(1)) || 0);
+                                                const sB = b.round === 'third' ? 998 : (b.roundLabel === 'Chung kết' ? 999 : parseInt(b.round.slice(1)) || 0);
+                                                return sA - sB;
+                                            })
+                                            .map(renderFramedMatch)}
+                                        {Object.values(mdData.matches || {}).filter(m => !m.isBye && m.team1 && m.team2).length === 0 &&
+                                            <p className="text-sm italic text-text-muted text-center py-10">Đang chờ xác định các cặp đấu...</p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // ScoringTab and BracketTab components remain separate for clarity
+
+        // ─── ScoringTab ───────────────────────────────────────────────────────────
+        const ScoringTab = ({ msData, mdData, saveMatchScore }) => {
+            const renderSection = (title, subtitle, data, accentClass) => {
+                const rounds = data?.rounds || [];
+                const matches = data?.matches || {};
+
+                if (!rounds.length) {
+                    return (
+                        <div className="glass-panel p-6">
+                            <h3 className={`text-lg font-bold mb-1 ${accentClass}`}>{title}</h3>
+                            <p className="text-xs text-text-muted mb-4">{subtitle}</p>
+                            <p className="text-sm italic text-text-muted">Chưa có sơ đồ thi đấu. Hãy khởi tạo giải đấu trước.</p>
+                        </div>
+                    );
+                }
+
+                const visibleMatches = rounds
+                    .flat()
+                    .map(id => matches[id])
+                    .filter(m => m && !m.isBye);
+
+                // Gom theo nhãn vòng đấu để vẽ thành từng khối: Play-in, Vòng chính, Bán kết, Chung kết...
+                const byRoundLabel = {};
+                visibleMatches.forEach(m => {
+                    const key = m.roundLabel || 'Khác';
+                    if (!byRoundLabel[key]) byRoundLabel[key] = [];
+                    byRoundLabel[key].push(m);
+                });
+
+                const orderedLabels = Object.keys(byRoundLabel).sort((a, b) => {
+                    const score = (label) => {
+                        if (label.toLowerCase().includes('play')) return 1;
+                        if (label.toLowerCase().includes('vòng')) return 2;
+                        if (label.toLowerCase().includes('bán kết')) return 3;
+                        if (label.toLowerCase().includes('chung')) return 4;
+                        if (label.toLowerCase().includes('tranh')) return 5;
+                        return 99;
+                    };
+                    return score(a) - score(b);
+                });
+
+                return (
+                    <div className="glass-panel p-6">
+                        <div className="flex items-center justify-between mb-3 border-b border-glass-border pb-2">
+                            <div>
+                                <h3 className={`text-lg font-bold ${accentClass}`}>{title}</h3>
+                                <p className="text-xs text-text-muted">{subtitle}</p>
+                            </div>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-text-muted uppercase tracking-wide">
+                                {visibleMatches.length} Trận
+                            </span>
+                        </div>
+
+                        {visibleMatches.length === 0 ? (
+                            <p className="text-sm italic text-text-muted py-6 text-center">
+                                Đang chờ xác định các cặp đấu...
+                            </p>
+                        ) : (
+                            <div className="space-y-6">
+                                {orderedLabels.map(labelKey => (
+                                    <div key={labelKey} className="rounded-xl border border-glass-border/60 bg-slate-900/50 p-4">
+                                        <div className="flex items-center justify-between mb-3">
+                                            <h4 className="text-sm font-semibold tracking-wide uppercase text-text-muted">
+                                                {labelKey}
+                                            </h4>
+                                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-text-muted">
+                                                {byRoundLabel[labelKey].length} trận
+                                            </span>
+                                        </div>
+                                        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+                                            {byRoundLabel[labelKey].map(m => (
+                                                <MatchScoreCard
+                                                    key={m.id}
+                                                    matchId={m.id}
+                                                    match={m}
+                                                    saveMatchScore={saveMatchScore}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                );
+            };
+
+            return (
+                <div className="space-y-8 animate-fade-in">
+                    <div className="flex items-center gap-4">
+                        <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-wide">
+                            📈 Nhập & Quản Lý Kết Quả
+                        </h2>
+                        <div className="h-px flex-1 bg-gradient-to-r from-glass-border to-transparent"></div>
+                    </div>
+                    <p className="text-sm text-text-muted mb-4">
+                        Chọn trận đấu và nhập kết quả. Hệ thống tự động tính người thắng, cập nhật nhánh đấu và bảng thành tích.
+                    </p>
+
+                    <div className="space-y-6">
+                        {renderSection(
+                            'Đơn Nam (Men\'s Singles)',
+                            'Nhập điểm cho các trận Đơn Nam.',
+                            msData,
+                            'text-blue-400'
+                        )}
+                        {renderSection(
+                            'Đôi Nam-Nữ (Mixed Doubles)',
+                            'Nhập điểm cho các trận Đôi Nam-Nữ.',
+                            mdData,
+                            'text-purple-400'
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        // ─── BracketTab ───────────────────────────────────────────────────────────
+        const BracketTab = ({ msData, mdData }) => {
+            const renderBracket = (data, title, color) => {
+                const { rounds, matches } = data;
+                if (!rounds || rounds.length === 0) return null;
+
+                const thirdId = Object.keys(matches).find(k => matches[k].round === 'third');
+
+                return (
+                    <div className="glass-panel p-8 mb-10 overflow-x-auto relative">
+                        <div className="flex items-center gap-3 mb-8">
+                            <h2 className={`text-2xl font-black uppercase tracking-tighter ${color}`}>{title}</h2>
+                            <div className="h-px w-20 bg-glass-border"></div>
+                        </div>
+
+                        <div className="flex gap-16 pb-10 min-w-max pr-16">
+                            {rounds.map((roundIds, ri) => {
+                                const visibleIds = roundIds.filter(id => !matches[id]?.isBye);
+                                if (visibleIds.length === 0) return null;
+
+                                const isFinalRound = ri === rounds.length - 1;
+                                const showThirdBeforeFinal = isFinalRound && thirdId && matches[thirdId];
+
+                                return (
+                                    <React.Fragment key={ri}>
+                                        {showThirdBeforeFinal && (
+                                            <div className="round-column justify-center">
+                                                <div className="text-[10px] uppercase font-black text-yellow-400 mb-6 tracking-[0.2em] text-center bg-yellow-400/10 py-1 rounded">
+                                                    Tranh Hạng 3
+                                                </div>
+                                                {(() => {
+                                                    const m = matches[thirdId];
+                                                    return (
+                                                        <div className="bracket-match-card rounded-xl overflow-hidden shadow-2xl min-w-[200px] border border-yellow-500/20">
+                                                            <div className="px-3 py-1.5 bg-yellow-500/10 text-[9px] text-yellow-400 font-bold border-b border-white/5 uppercase">
+                                                                Trận Tranh Giải 3
+                                                            </div>
+                                                            {[m.team1, m.team2].map((team, ti) => (
+                                                                <div key={ti} className={`px-4 py-2.5 flex justify-between items-center ${ti === 0 ? 'border-b border-white/5' : ''} ${team && m.winner?.id === team.id ? 'bg-yellow-500/10' : ''}`}>
+                                                                    <span className={`text-sm break-words whitespace-normal leading-tight max-w-[140px] ${team && m.winner?.id === team.id ? 'text-white font-bold' : 'text-gray-400'}`}>
+                                                                        {team?.name || 'TBA'}
+                                                                    </span>
+                                                                    <div className="flex gap-1">
+                                                                        {m.scores?.map((s, si) => (
+                                                                            <span key={si} className="score-box-vibrant bg-yellow-500/10 text-yellow-400">
+                                                                                {ti === 0 ? s.s1 : s.s2}
+                                                                            </span>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    );
+                                                })()}
+                                            </div>
+                                        )}
+
+                                        <div className="round-column">
+                                            <div className="text-[10px] uppercase font-black text-text-muted mb-6 tracking-[0.2em] text-center bg-white/5 py-1 rounded">
+                                                {matches[visibleIds[0]]?.roundLabel}
+                                            </div>
+
+                                            <div className="flex-1 flex flex-col justify-around gap-8">
+                                                {visibleIds.map((id, mi) => {
+                                                    const m = matches[id];
+                                                    const hasNext = !!m.nextMatchId && matches[m.nextMatchId];
+
+                                                    return (
+                                                        <div key={id} className="relative flex items-center">
+                                                            {/* Match Card */}
+                                                            <div className="bracket-match-card rounded-xl overflow-hidden shadow-2xl min-w-[200px] border border-white/5">
+                                                                <div className="px-3 py-1.5 bg-white/5 text-[9px] text-text-muted font-bold border-b border-white/5 flex justify-between items-center uppercase">
+                                                                    <span>{ri === rounds.length - 1 ? 'Chung Kết' : `Trận ${mi + 1}`}</span>
+                                                                    {m.winner && <span className="text-success text-[8px] animate-pulse">● Kết Thúc</span>}
+                                                                </div>
+                                                                {[m.team1, m.team2].map((team, ti) => {
+                                                                    const isWinner = team && m.winner?.id === team.id;
+                                                                    return (
+                                                                        <div key={ti} className={`px-4 py-2.5 flex justify-between items-center ${ti === 0 ? 'border-b border-white/5' : ''} ${isWinner ? 'bg-success/10' : ''}`}>
+                                                                            <span className={`text-sm break-words whitespace-normal leading-tight max-w-[140px] ${isWinner ? 'text-white font-bold' : 'text-gray-400'}`}>
+                                                                                {team?.name || 'TBA'}
+                                                                            </span>
+                                                                            <div className="flex gap-1">
+                                                                                {m.scores?.map((s, si) => (
+                                                                                    <span key={si} className={`score-box-vibrant ${isWinner ? 'bg-success/20 text-success' : ''}`}>
+                                                                                        {ti === 0 ? s.s1 : s.s2}
+                                                                                    </span>
+                                                                                ))}
+                                                                            </div>
+                                                                        </div>
+                                                                    );
+                                                                })}
+                                                            </div>
+
+                                                            {/* Connector Lines */}
+                                                            {hasNext && ri < rounds.length - 1 && (
+                                                                <>
+                                                                    {/* Horizontal line out */}
+                                                                    <div className="connector-line connector-horizontal"
+                                                                        style={{ right: '-32px', width: '32px', top: '50%' }}></div>
+
+                                                                    {/* Vertical line up/down */}
+                                                                    {mi % 2 === 0 ? (
+                                                                        <div className="connector-line connector-vertical"
+                                                                            style={{ right: '-32px', top: '50%', height: 'calc(50% + 15px)' }}></div>
+                                                                    ) : (
+                                                                        <div className="connector-line connector-vertical"
+                                                                            style={{ right: '-32px', bottom: '50%', height: 'calc(50% + 15px)' }}></div>
+                                                                    )}
+
+                                                                    {/* Horizontal line into next round (only for even matches to cover the pair) */}
+                                                                    {mi % 2 === 0 && (
+                                                                        <div className="connector-line connector-horizontal"
+                                                                            style={{ right: '-64px', width: '32px', top: 'calc(50% + 50% + 15px)' }}></div>
+                                                                    )}
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    </React.Fragment>
+                                );
+                            })}
+                        </div>
+                    </div>
+                );
+            };
+
+            const visibleMatches = (matches, rounds) => {
+                return rounds.flat().map(id => matches[id]).filter(m => !m.isBye);
+            };
+
+            return (
+                <div className="animate-fade-in space-y-4">
+                    <div className="flex items-center gap-4 mb-2">
+                        <h1 className="text-3xl font-black text-white italic uppercase tracking-wider">
+                            📊 Biểu Đồ Nhánh Thi Đấu
+                        </h1>
+                        <div className="h-px flex-1 bg-gradient-to-r from-glass-border to-transparent"></div>
+                    </div>
+                    {renderBracket(msData, 'Đơn Nam', 'text-primary')}
+                    {renderBracket(mdData, 'Đôi Nam-Nữ', 'text-accent')}
+                </div>
+            );
+        };
+
+        // ─── PodiumTab ────────────────────────────────────────────────────────────
+        const PodiumTab = ({ msData, mdData }) => {
+            const getRankings = (data) => {
+                const results = { rank1: null, rank2: null, rank3: null, rank4: null };
+                const matches = data.matches || {};
+
+                // Final Match
+                const finalMatch = Object.values(matches).find(m => m.roundLabel === 'Chung kết' || m.id.includes('_final'));
+                if (finalMatch?.winner) {
+                    results.rank1 = finalMatch.winner.name;
+                    results.rank2 = finalMatch.loser.name;
+                }
+
+                // 3rd Match
+                const thirdMatch = Object.values(matches).find(m => m.round === 'third');
+                if (thirdMatch?.winner) {
+                    results.rank3 = thirdMatch.winner.name;
+                    results.rank4 = thirdMatch.loser.name;
+                }
+
+                return results;
+            };
+
+            const renderPodium = (title, data, icon) => {
+                const ranks = getRankings(data);
+                return (
+                    <div className="glass-panel p-8 mb-10 overflow-hidden relative">
+                        <div className="absolute top-0 right-0 p-10 opacity-5 pointer-events-none text-9xl">
+                            {icon === 'pickleball' ? (
+                                <img src="pickleball-icon.png" alt="" className="icon-pickleball" />
+                            ) : (
+                                icon
+                            )}
+                        </div>
+                        <h2 className="text-2xl font-black uppercase mb-8 flex items-center gap-3">
+                            {icon === 'pickleball' ? (
+                                <img src="pickleball-icon.png" alt="" className="icon-pickleball" />
+                            ) : (
+                                <span>{icon}</span>
+                            )} {title}
+                        </h2>
+
+                        <div className="podium-container">
+                            {[
+                                { rank: 2, name: ranks.rank2, label: 'Bạc', icon: '🥈' },
+                                { rank: 1, name: ranks.rank1, label: 'Vàng', icon: '🥇' },
+                                { rank: 3, name: ranks.rank3, label: 'Đồng', icon: '🥉' },
+                                { rank: 4, name: ranks.rank4, label: 'Chì', icon: '🎗️' }
+                            ].map(s => (
+                                <div key={s.rank} className={`podium-spot rank-${s.rank}`}>
+                                    <div className="medalist-name">{s.name || '???'}</div>
+                                    <div className="medal-icon">{s.icon}</div>
+                                    <div className="podium-base">
+                                        <div className="text-2xl mb-1">{s.rank}</div>
+                                        <div className="text-[10px] uppercase opacity-70 tracking-tighter">{s.label}</div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            };
+
+            return (
+                <div className="animate-fade-in space-y-4">
+                    <div className="flex items-center gap-4 mb-2">
+                        <h1 className="text-3xl font-black text-white italic uppercase tracking-wider">
+                            👑 Bảng Vàng Thành Tích
+                        </h1>
+                        <div className="h-px flex-1 bg-gradient-to-r from-glass-border to-transparent"></div>
+                    </div>
+                    {renderPodium('Đơn Nam (Men\'s Singles)', msData, 'pickleball')}
+                    {renderPodium('Đôi Nam-Nữ (Mixed Doubles)', mdData, '🤝')}
+
+                    {/* Legend Section */}
+                    <div className="glass-panel p-6 mt-10">
+                        <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                            <span>ℹ️</span> Giải thích ký hiệu:
+                        </h3>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div className="flex items-center gap-2 text-sm">
+                                <span className="text-2xl">🥇</span>
+                                <span className="text-gray-300"><b className="text-yellow-400">Vàng:</b> Hạng 1 (Vô Địch)</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm">
+                                <span className="text-2xl">🥈</span>
+                                <span className="text-gray-300"><b className="text-gray-200">Bạc:</b> Hạng 2 (Á Quân)</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm">
+                                <span className="text-2xl">🥉</span>
+                                <span className="text-gray-300"><b className="text-orange-400">Đồng:</b> Hạng 3 (Thắng tranh 3)</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm">
+                                <span className="text-2xl">🎗️</span>
+                                <span className="text-gray-300"><b className="text-blue-400">Chì:</b> Hạng 4 (Thua tranh 3)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // ─── App ──────────────────────────────────────────────────────────────────
+        const App = () => {
+            const [role, setRole] = useState('landing'); // 'landing', 'admin', 'public'
+            const [viewMode, setViewMode] = useState('admin');
+            const [activeTab, setActiveTab] = useState('setup');
+            const [password, setPassword] = useState('');
+            const [showPasswordModal, setShowPasswordModal] = useState(false);
+
+            const [players, setPlayers] = useState(INITIAL_PLAYERS);
+            const [mdTeams, setMdTeams] = useState([]);
+            const [initialized, setInitialized] = useState(false);
+
+            const [msData, setMsData] = useState({ rounds: [], matches: {} });
+            const [mdData, setMdData] = useState({ rounds: [], matches: {} });
+
+            useEffect(() => {
+                fetch('http://localhost:3001/api/data')
+                    .then(r => r.json())
+                    .then(d => {
+                        if (!d) return;
+                        const lp = d.players;
+                        if (lp?.men && lp?.women) setPlayers(lp);
+                        if (d.mdTeams) setMdTeams(d.mdTeams);
+                        if (d.msData) setMsData(d.msData);
+                        if (d.mdData) setMdData(d.mdData);
+                        if (d.initialized) setInitialized(d.initialized);
+                    })
+                    .catch(() => { });
+            }, []);
+
+            const timerRef = useRef(null);
+            const generateTxt = () => {
+                let txt = 'BÁO CÁO KẾT QUẢ GIẢI ĐẤU Pickleball PCB\n=================================\n\n';
+                txt += '=== DANH SÁCH VĐV NAM ===\n';
+                players.men.filter(p => p.name).forEach((p, i) => { txt += `${i + 1}. ${p.name} (Sức mạnh: ${p.rank})\n`; });
+                txt += '\n=== CÁC CẶP ĐÔI NAM-Nữ ===\n';
+                mdTeams.forEach(t => { txt += `${t.name}\n`; });
+                txt += '\n=== KẾT QUẢ TRẬN ĐẤU ===\n';
+                const allMatches = { ...msData.matches, ...mdData.matches };
+                Object.values(allMatches).forEach(m => {
+                    if (m.isBye) return;
+                    if (!m.team1 || !m.team2) return;
+                    txt += `${m.name}: ${m.team1?.name} vs ${m.team2?.name}`;
+                    if (m.scores?.length > 0) txt += ' | ' + m.scores.map(s => `${s.s1}-${s.s2}`).join(', ');
+                    if (m.winner) txt += ` => ${m.winner.name} THẮNG`;
+                    txt += '\n';
+                });
+                return txt;
+            };
+
+            useEffect(() => {
+                if (timerRef.current) clearTimeout(timerRef.current);
+                timerRef.current = setTimeout(async () => {
+                    try {
+                        await fetch('http://localhost:3001/api/save', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                state: { players, mdTeams, msData, mdData, initialized },
+                                txtReport: generateTxt()
+                            })
+                        });
+                    } catch (e) { }
+                }, 1500);
+                return () => clearTimeout(timerRef.current);
+            }, [players, mdTeams, msData, mdData, initialized]);
+
+            const handlePlayerCountChange = (cat, val) => {
+                const n = Math.max(2, parseInt(val) || 2);
+                setPlayers(prev => {
+                    const list = prev[cat];
+                    if (n > list.length) {
+                        const added = Array(n - list.length).fill(null).map((_, i) => ({
+                            id: `${cat}_x${Date.now()}_${i}`, name: '', rank: list.length + i + 1
+                        }));
+                        return { ...prev, [cat]: [...list, ...added] };
+                    }
+                    return { ...prev, [cat]: list.slice(0, n) };
+                });
+            };
+
+            const handlePlayerChange = (cat, idx, field, val) => {
+                setPlayers(prev => {
+                    const list = [...prev[cat]];
+                    list[idx] = { ...list[idx], [field]: field === 'rank' ? (parseInt(val) || 0) : val };
+                    return { ...prev, [cat]: list };
+                });
+            };
+
+            const initializeTournament = () => {
+                const activeMen = players.men.filter(p => p.name.trim());
+                const activeWomen = players.women.filter(p => p.name.trim());
+                if (activeMen.length < 2) { alert('Cần ít nhất 2 VĐV Nam!'); return; }
+                if (activeWomen.length < 2) { alert('Cần ít nhất 2 VĐV Nữ!'); return; }
+
+                const ms = buildBracket(activeMen, 'ms', 'Đơn Nam');
+                setMsData(ms);
+
+                const teams = buildMdTeams(activeMen, activeWomen);
+                setMdTeams(teams);
+                const md = buildBracket(teams, 'md', 'Đôi Nam-Nữ');
+                setMdData(md);
+
+                setInitialized(true);
+            };
+
+            const saveMatchScore = (matchId, inputScores) => {
+                const inMs = matchId in msData.matches;
+                const data = inMs ? msData : mdData;
+                const setData = inMs ? setMsData : setMdData;
+
+                const matches = JSON.parse(JSON.stringify(data.matches));
+                const match = matches[matchId];
+                if (!match?.team1 || !match?.team2) return;
+
+                let t1w = 0, t2w = 0;
+                const scored = [];
+                for (let i = 0; i < 5; i++) {
+                    const s = inputScores[i];
+                    if (!s || s.s1 === '' || s.s2 === '') break;
+                    const v = validateScore(s.s1, s.s2);
+                    if (!v.valid) { alert(`Set ${i + 1}: ${v.msg}`); return; }
+                    if (v.winner === 1) t1w++; else t2w++;
+                    scored.push({ s1: parseInt(s.s1), s2: parseInt(s.s2), winner: v.winner });
+                    if (t1w === 3 || t2w === 3) break;
+                }
+
+                match.scores = scored;
+                if (t1w === 3 || t2w === 3) {
+                    match.winner = t1w === 3 ? match.team1 : match.team2;
+                    match.loser = t1w === 3 ? match.team2 : match.team1;
+
+                    if (match.nextMatchId && matches[match.nextMatchId]) {
+                        matches[match.nextMatchId][match.nextSlot] = match.winner;
+                    }
+
+                    const thirdId = Object.keys(matches).find(k => matches[k].round === 'third');
+                    if (thirdId) {
+                        const thirdMatch = matches[thirdId];
+                        const sfIds = data.rounds[data.rounds.length - 2] || [];
+                        if (sfIds.includes(matchId)) {
+                            if (!thirdMatch.team1) thirdMatch.team1 = match.loser;
+                            else if (!thirdMatch.team2) thirdMatch.team2 = match.loser;
+                        }
+                    }
+                } else {
+                    match.winner = null; match.loser = null;
+                }
+
+                setData(prev => ({ ...prev, matches }));
+            };
+
+            const simulateTournament = () => {
+                if (!initialized) { alert('Vui lòng khởi tạo giải đấu trước!'); return; }
+                const runSim = (data, setter) => {
+                    const matches = JSON.parse(JSON.stringify(data.matches));
+                    let changed = false;
+                    for (let iter = 0; iter < 10; iter++) {
+                        let iterC = false;
+                        Object.keys(matches).forEach(id => {
+                            const m = matches[id];
+                            if (m.isBye || m.winner || !m.team1 || !m.team2) return;
+                            const scores = []; let w1 = 0, w2 = 0;
+                            while (w1 < 3 && w2 < 3) {
+                                const s1 = Math.floor(Math.random() * 12), s2 = Math.floor(Math.random() * 12);
+                                if (s1 === s2) continue;
+                                scores.push({ s1, s2, winner: s1 > s2 ? 1 : 2 });
+                                if (s1 > s2) w1++; else w2++;
+                            }
+                            m.scores = scores; m.winner = w1 === 3 ? m.team1 : m.team2; m.loser = w1 === 3 ? m.team2 : m.team1;
+                            if (m.nextMatchId && matches[m.nextMatchId]) matches[m.nextMatchId][m.nextSlot] = m.winner;
+                            const thirdId = Object.keys(matches).find(k => matches[k].round === 'third');
+                            if (thirdId) {
+                                const tm = matches[thirdId]; const sfIds = data.rounds[data.rounds.length - 2] || [];
+                                if (sfIds.includes(id)) { if (!tm.team1) tm.team1 = m.loser; else if (!tm.team2) tm.team2 = m.loser; }
+                            }
+                            iterC = true; changed = true;
+                        });
+                        if (!iterC) break;
+                    }
+                    if (changed) setter(prev => ({ ...prev, matches }));
+                };
+                runSim(msData, setMsData); runSim(mdData, setMdData);
+            };
+
+            const exportData = () => {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(new Blob([JSON.stringify({ players, mdTeams, msData, mdData, initialized }, null, 2)], { type: 'application/json' }));
+                a.download = 'Pickleball PCB-data.json'; a.click();
+            };
+            const importData = () => {
+                const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.json';
+                inp.onchange = e => {
+                    const fr = new FileReader();
+                    fr.onload = ev => {
+                        try {
+                            const d = JSON.parse(ev.target.result);
+                            if (d.players) setPlayers(d.players);
+                            if (d.mdTeams) setMdTeams(d.mdTeams);
+                            if (d.msData) setMsData(d.msData);
+                            if (d.mdData) setMdData(d.mdData);
+                            if (d.initialized !== undefined) setInitialized(d.initialized);
+                            alert('Đã khôi phục dữ liệu!');
+                        } catch { alert('File JSON lỗi!'); }
+                    };
+                    fr.readAsText(e.target.files[0]);
+                };
+                inp.click();
+            };
+            const resetAll = () => {
+                if (!confirm('Xác nhận xóa toàn bộ dữ liệu?')) return;
+                setPlayers(INITIAL_PLAYERS); setMdTeams([]);
+                setMsData({ rounds: [], matches: {} }); setMdData({ rounds: [], matches: {} });
+                setInitialized(false);
+            };
+
+            const handleLogin = () => {
+                if (password === 'PCB2026') {
+                    setRole('admin');
+                    setViewMode('admin');
+                    setActiveTab('setup');
+                    setShowPasswordModal(false);
+                } else {
+                    alert('Sai mật khẩu! Vui lòng thử lại.');
+                }
+            };
+
+            if (role === 'landing') {
+                return (
+                    <div className="min-h-screen flex items-center justify-center p-6 bg-[#0f172a]">
+                        <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in">
+                            {/* Brand Section */}
+                            <div className="flex flex-col justify-center items-center text-center md:text-left md:items-start p-8">
+                                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-2xl mb-6 overflow-hidden">
+                                    <img src="pickleball-icon.png" alt="Pickleball PCB" className="icon-pickleball" />
+                                </div>
+                                <h1 className="text-5xl font-black text-white uppercase italic tracking-tighter leading-none mb-4">
+                                    Pickleball <span className="text-primary italic block">PCB 2026</span>
+                                </h1>
+                                <p className="text-gray-400 text-lg max-w-sm">Hệ thống quản lý và trực tiếp kết quả giải đấu chuyên nghiệp.</p>
+                            </div>
+
+                            {/* Options Section */}
+                            <div className="space-y-4 flex flex-col justify-center">
+                                <button onClick={() => setShowPasswordModal(true)}
+                                    className="glass-panel p-8 w-full text-left transition-all hover:scale-[1.02] hover:bg-white/10 group border-l-4 border-primary">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-2xl font-bold text-white group-hover:text-primary">⚙️ Admin Dashboard</span>
+                                        <span className="text-gray-500">→</span>
+                                    </div>
+                                    <p className="text-sm text-gray-400">Dành cho ban tổ chức: Quản lý VĐV, bốc thăm và nhập điểm.</p>
+                                </button>
+
+                                <button onClick={() => { setRole('public'); setViewMode('public'); setActiveTab('bracket'); }}
+                                    className="glass-panel p-8 w-full text-left transition-all hover:scale-[1.02] hover:bg-white/10 group border-l-4 border-accent">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-2xl font-bold text-white group-hover:text-accent">📺 Public View</span>
+                                        <span className="text-gray-500">→</span>
+                                    </div>
+                                    <p className="text-sm text-gray-400">Dành cho khán giả: Xem lịch thi đấu, Bracket và Bảng vàng thành tích.</p>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Password Modal */}
+                        {showPasswordModal && (
+                            <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+                                <div className="glass-panel p-8 max-w-sm w-full animate-pop-in">
+                                    <h3 className="text-xl font-bold text-white mb-4">Mật khẩu Admin</h3>
+                                    <input type="password" value={password} onChange={e => setPassword(e.target.value)}
+                                        onKeyPress={e => e.key === 'Enter' && handleLogin()}
+                                        placeholder="Nhập PCB20..."
+                                        className="w-full bg-slate-900 border border-glass-border rounded-lg p-3 text-white mb-6 focus:border-primary outline-none" autoFocus />
+                                    <div className="flex gap-2">
+                                        <button onClick={() => setShowPasswordModal(false)} className="btn btn-ghost flex-1">Hủy</button>
+                                        <button onClick={handleLogin} className="btn btn-primary flex-1">Xác nhận</button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                );
+            }
+
+            return (
+                <div className="max-w-[1400px] mx-auto p-4 md:p-8">
+                    {/* Header */}
+                    <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                        <div className="flex items-center gap-3">
+                            <button onClick={() => setRole('landing')} className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg hover:rotate-12 transition-transform overflow-hidden">
+                                <img src="pickleball-icon.png" alt="Pickleball PCB" className="icon-pickleball" />
+                            </button>
+                            <div>
+                                <h1 className="text-2xl font-bold">Pickleball PCB Manager</h1>
+                                <p className="text-sm text-text-muted">Giải Đấu Pickleball PCB – Dynamic Bracket</p>
+                            </div>
+                        </div>
+                        <div className="flex gap-2 bg-slate-800/50 p-2 rounded-lg border border-glass-border flex-wrap">
+                            {role === 'admin' && (
+                                <button className={`btn text-sm ${viewMode === 'admin' ? 'bg-white/10 text-white' : 'btn-ghost'}`} onClick={() => setViewMode('admin')}>⚙️ Admin</button>
+                            )}
+                            <button className={`btn text-sm ${viewMode === 'public' ? 'bg-white/10 text-white' : 'btn-ghost'}`} onClick={() => setViewMode('public')}>📺 Public</button>
+                            <div className="w-px bg-glass-border mx-1" />
+                            <button onClick={() => setRole('landing')} className="btn btn-ghost text-sm">🚪 Thoát</button>
+
+                            {viewMode === 'admin' && <>
+                                <div className="w-px bg-glass-border mx-1" />
+                                <span className="text-xs text-success flex items-center px-2 py-1 bg-success/10 rounded border border-success/30">🟢 Tự động lưu</span>
+                                <button className="btn btn-ghost text-sm" onClick={exportData}>⬇️ JSON</button>
+                                <button className="btn btn-primary text-sm shadow-none bg-blue-600" onClick={simulateTournament}>🎲 Mô Phỏng</button>
+                                <button className="btn btn-ghost text-sm" onClick={importData}>⬆️ Nhập</button>
+                                <button className="btn btn-danger text-sm" onClick={resetAll}>🗑️ Reset</button>
+                            </>}
+                        </div>
+                    </div>
+
+                    {/* Tabs */}
+                    {(viewMode === 'admin' || viewMode === 'public') && (
+                        <div className="flex border-b border-glass-border mb-8 overflow-x-auto">
+                            {[
+                                role === 'admin' ? ['setup', '1. Quản Lý'] : null,
+                                role === 'admin' ? ['scoring', '2. Nhập Kết Quả'] : null,
+                                ['bracket', '3. Lịch thi đấu'],
+                                ['podium', '🏆 Thành Tích']
+                            ].filter(Boolean).map(([k, label]) => (
+                                <div key={k} className={`tab-btn whitespace-nowrap ${activeTab === k ? 'active' : ''}`} onClick={() => setActiveTab(k)}>{label}</div>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Content */}
+                    <div className="min-h-[60vh]">
+                        {viewMode === 'public' ? (
+                            <div className="space-y-12">
+                                <PodiumTab msData={msData} mdData={mdData} />
+                                <BracketTab msData={msData} mdData={mdData} />
+                            </div>
+                        ) : (
+                            <>
+                                {activeTab === 'setup' && <SetupTab players={players} mdTeams={mdTeams} initialized={initialized} handlePlayerCountChange={handlePlayerCountChange} handlePlayerChange={handlePlayerChange} initializeTournament={initializeTournament} msData={msData} mdData={mdData} />}
+                                {activeTab === 'scoring' && <ScoringTab msData={msData} mdData={mdData} saveMatchScore={saveMatchScore} />}
+                                {activeTab === 'bracket' && <BracketTab msData={msData} mdData={mdData} />}
+                                {activeTab === 'podium' && <PodiumTab msData={msData} mdData={mdData} />}
+                            </>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>

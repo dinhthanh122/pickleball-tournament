@@ -1,0 +1,1232 @@
+{
+  "players": {
+    "men": [
+      {
+        "id": "man1",
+        "name": "Đào Minh Hiển",
+        "rank": 1
+      },
+      {
+        "id": "man2",
+        "name": "Tuấn",
+        "rank": 2
+      },
+      {
+        "id": "men_x1772107033861_0",
+        "name": "Duy",
+        "rank": 3
+      },
+      {
+        "id": "men_x1772107033861_1",
+        "name": "Cảnh",
+        "rank": 4
+      },
+      {
+        "id": "men_x1772107033861_2",
+        "name": "Mão",
+        "rank": 5
+      },
+      {
+        "id": "men_x1772107033861_3",
+        "name": "Khôi",
+        "rank": 6
+      },
+      {
+        "id": "men_x1772107033861_4",
+        "name": "Hoa",
+        "rank": 7
+      },
+      {
+        "id": "men_x1772107033861_5",
+        "name": "Cương",
+        "rank": 8
+      },
+      {
+        "id": "men_x1772107038643_0",
+        "name": "Long",
+        "rank": 9
+      },
+      {
+        "id": "men_x1772107038805_0",
+        "name": "HuyNN",
+        "rank": 10
+      },
+      {
+        "id": "men_x1772107039586_0",
+        "name": "Quân",
+        "rank": 11
+      }
+    ],
+    "women": [
+      {
+        "id": "woman1",
+        "name": "Chinh",
+        "rank": 1
+      },
+      {
+        "id": "woman2",
+        "name": "Hương",
+        "rank": 2
+      },
+      {
+        "id": "woman3",
+        "name": "Thảo",
+        "rank": 3
+      },
+      {
+        "id": "woman4",
+        "name": "Vy",
+        "rank": 4
+      },
+      {
+        "id": "women_x1772107115095_0",
+        "name": "Linh",
+        "rank": 5
+      }
+    ]
+  },
+  "mdTeams": [
+    {
+      "id": "mdteam1",
+      "name": "Đôi 1: Đào Minh Hiển + Linh",
+      "man": {
+        "id": "man1",
+        "name": "Đào Minh Hiển",
+        "rank": 1
+      },
+      "woman": {
+        "id": "women_x1772107115095_0",
+        "name": "Linh",
+        "rank": 5
+      },
+      "rank": 1
+    },
+    {
+      "id": "mdteam2",
+      "name": "Đôi 2: Tuấn + Vy",
+      "man": {
+        "id": "man2",
+        "name": "Tuấn",
+        "rank": 2
+      },
+      "woman": {
+        "id": "woman4",
+        "name": "Vy",
+        "rank": 4
+      },
+      "rank": 2
+    },
+    {
+      "id": "mdteam3",
+      "name": "Đôi 3: Duy + Thảo",
+      "man": {
+        "id": "men_x1772107033861_0",
+        "name": "Duy",
+        "rank": 3
+      },
+      "woman": {
+        "id": "woman3",
+        "name": "Thảo",
+        "rank": 3
+      },
+      "rank": 3
+    },
+    {
+      "id": "mdteam4",
+      "name": "Đôi 4: Cảnh + Hương",
+      "man": {
+        "id": "men_x1772107033861_1",
+        "name": "Cảnh",
+        "rank": 4
+      },
+      "woman": {
+        "id": "woman2",
+        "name": "Hương",
+        "rank": 2
+      },
+      "rank": 4
+    },
+    {
+      "id": "mdteam5",
+      "name": "Đôi 5: Mão + Chinh",
+      "man": {
+        "id": "men_x1772107033861_2",
+        "name": "Mão",
+        "rank": 5
+      },
+      "woman": {
+        "id": "woman1",
+        "name": "Chinh",
+        "rank": 1
+      },
+      "rank": 5
+    }
+  ],
+  "msData": {
+    "rounds": [
+      [
+        "ms_r0_m0",
+        "ms_r0_m1",
+        "ms_r0_m2"
+      ],
+      [
+        "ms_r1_m0",
+        "ms_r1_m1",
+        "ms_r1_m2",
+        "ms_r1_m3"
+      ],
+      [
+        "ms_r2_m0",
+        "ms_r2_m1"
+      ],
+      [
+        "ms_r3_m0"
+      ]
+    ],
+    "matches": {
+      "ms_r0_m0": {
+        "id": "ms_r0_m0",
+        "type": "ms",
+        "round": "r0",
+        "roundLabel": "Play-in",
+        "name": "Play-in (Đơn Nam) Trận 1",
+        "team1": {
+          "id": "men_x1772107038805_0",
+          "name": "HuyNN",
+          "rank": 10
+        },
+        "team2": {
+          "id": "men_x1772107039586_0",
+          "name": "Quân",
+          "rank": 11
+        },
+        "scores": [
+          {
+            "s1": 0,
+            "s2": 6,
+            "winner": 2
+          },
+          {
+            "s1": 10,
+            "s2": 6,
+            "winner": 1
+          },
+          {
+            "s1": 2,
+            "s2": 9,
+            "winner": 2
+          },
+          {
+            "s1": 0,
+            "s2": 11,
+            "winner": 2
+          }
+        ],
+        "winner": {
+          "id": "men_x1772107039586_0",
+          "name": "Quân",
+          "rank": 11
+        },
+        "loser": {
+          "id": "men_x1772107038805_0",
+          "name": "HuyNN",
+          "rank": 10
+        },
+        "nextMatchId": "ms_r1_m0",
+        "nextSlot": "team2"
+      },
+      "ms_r0_m1": {
+        "id": "ms_r0_m1",
+        "type": "ms",
+        "round": "r0",
+        "roundLabel": "Play-in",
+        "name": "Play-in (Đơn Nam) Trận 2",
+        "team1": {
+          "id": "men_x1772107033861_5",
+          "name": "Cương",
+          "rank": 8
+        },
+        "team2": {
+          "id": "men_x1772107038643_0",
+          "name": "Long",
+          "rank": 9
+        },
+        "scores": [
+          {
+            "s1": 8,
+            "s2": 0,
+            "winner": 1
+          },
+          {
+            "s1": 10,
+            "s2": 6,
+            "winner": 1
+          },
+          {
+            "s1": 3,
+            "s2": 0,
+            "winner": 1
+          }
+        ],
+        "winner": {
+          "id": "men_x1772107033861_5",
+          "name": "Cương",
+          "rank": 8
+        },
+        "loser": {
+          "id": "men_x1772107038643_0",
+          "name": "Long",
+          "rank": 9
+        },
+        "nextMatchId": "ms_r1_m1",
+        "nextSlot": "team2"
+      },
+      "ms_r0_m2": {
+        "id": "ms_r0_m2",
+        "type": "ms",
+        "round": "r0",
+        "roundLabel": "Play-in",
+        "name": "Play-in (Đơn Nam) Trận 3",
+        "team1": {
+          "id": "men_x1772107033861_3",
+          "name": "Khôi",
+          "rank": 6
+        },
+        "team2": {
+          "id": "men_x1772107033861_4",
+          "name": "Hoa",
+          "rank": 7
+        },
+        "scores": [
+          {
+            "s1": 0,
+            "s2": 11,
+            "winner": 2
+          },
+          {
+            "s1": 10,
+            "s2": 5,
+            "winner": 1
+          },
+          {
+            "s1": 5,
+            "s2": 8,
+            "winner": 2
+          },
+          {
+            "s1": 4,
+            "s2": 3,
+            "winner": 1
+          },
+          {
+            "s1": 7,
+            "s2": 10,
+            "winner": 2
+          }
+        ],
+        "winner": {
+          "id": "men_x1772107033861_4",
+          "name": "Hoa",
+          "rank": 7
+        },
+        "loser": {
+          "id": "men_x1772107033861_3",
+          "name": "Khôi",
+          "rank": 6
+        },
+        "nextMatchId": "ms_r1_m2",
+        "nextSlot": "team2"
+      },
+      "ms_r1_m0": {
+        "id": "ms_r1_m0",
+        "type": "ms",
+        "round": "r1",
+        "roundLabel": "Vòng chính",
+        "name": "Vòng chính (Đơn Nam) Trận 1",
+        "team1": {
+          "id": "man1",
+          "name": "Đào Minh Hiển",
+          "rank": 1
+        },
+        "team2": {
+          "id": "men_x1772107039586_0",
+          "name": "Quân",
+          "rank": 11
+        },
+        "scores": [
+          {
+            "s1": 5,
+            "s2": 10,
+            "winner": 2
+          },
+          {
+            "s1": 1,
+            "s2": 11,
+            "winner": 2
+          },
+          {
+            "s1": 7,
+            "s2": 9,
+            "winner": 2
+          }
+        ],
+        "winner": {
+          "id": "men_x1772107039586_0",
+          "name": "Quân",
+          "rank": 11
+        },
+        "loser": {
+          "id": "man1",
+          "name": "Đào Minh Hiển",
+          "rank": 1
+        },
+        "nextMatchId": "ms_r2_m0",
+        "nextSlot": "team1"
+      },
+      "ms_r1_m1": {
+        "id": "ms_r1_m1",
+        "type": "ms",
+        "round": "r1",
+        "roundLabel": "Vòng chính",
+        "name": "Vòng chính (Đơn Nam) Trận 2",
+        "team1": {
+          "id": "man2",
+          "name": "Tuấn",
+          "rank": 2
+        },
+        "team2": {
+          "id": "men_x1772107033861_5",
+          "name": "Cương",
+          "rank": 8
+        },
+        "scores": [
+          {
+            "s1": 10,
+            "s2": 6,
+            "winner": 1
+          },
+          {
+            "s1": 3,
+            "s2": 8,
+            "winner": 2
+          },
+          {
+            "s1": 1,
+            "s2": 4,
+            "winner": 2
+          },
+          {
+            "s1": 9,
+            "s2": 1,
+            "winner": 1
+          },
+          {
+            "s1": 10,
+            "s2": 8,
+            "winner": 1
+          }
+        ],
+        "winner": {
+          "id": "man2",
+          "name": "Tuấn",
+          "rank": 2
+        },
+        "loser": {
+          "id": "men_x1772107033861_5",
+          "name": "Cương",
+          "rank": 8
+        },
+        "nextMatchId": "ms_r2_m0",
+        "nextSlot": "team2"
+      },
+      "ms_r1_m2": {
+        "id": "ms_r1_m2",
+        "type": "ms",
+        "round": "r1",
+        "roundLabel": "Vòng chính",
+        "name": "Vòng chính (Đơn Nam) Trận 3",
+        "team1": {
+          "id": "men_x1772107033861_0",
+          "name": "Duy",
+          "rank": 3
+        },
+        "team2": {
+          "id": "men_x1772107033861_4",
+          "name": "Hoa",
+          "rank": 7
+        },
+        "scores": [
+          {
+            "s1": 11,
+            "s2": 5,
+            "winner": 1
+          },
+          {
+            "s1": 0,
+            "s2": 8,
+            "winner": 2
+          },
+          {
+            "s1": 9,
+            "s2": 11,
+            "winner": 2
+          },
+          {
+            "s1": 5,
+            "s2": 7,
+            "winner": 2
+          }
+        ],
+        "winner": {
+          "id": "men_x1772107033861_4",
+          "name": "Hoa",
+          "rank": 7
+        },
+        "loser": {
+          "id": "men_x1772107033861_0",
+          "name": "Duy",
+          "rank": 3
+        },
+        "nextMatchId": "ms_r2_m1",
+        "nextSlot": "team1"
+      },
+      "ms_r1_m3": {
+        "id": "ms_r1_m3",
+        "type": "ms",
+        "round": "r1",
+        "roundLabel": "Vòng chính",
+        "name": "Vòng chính (Đơn Nam) Trận 4",
+        "team1": {
+          "id": "men_x1772107033861_1",
+          "name": "Cảnh",
+          "rank": 4
+        },
+        "team2": {
+          "id": "men_x1772107033861_2",
+          "name": "Mão",
+          "rank": 5
+        },
+        "scores": [
+          {
+            "s1": 10,
+            "s2": 9,
+            "winner": 1
+          },
+          {
+            "s1": 3,
+            "s2": 5,
+            "winner": 2
+          },
+          {
+            "s1": 5,
+            "s2": 9,
+            "winner": 2
+          },
+          {
+            "s1": 3,
+            "s2": 1,
+            "winner": 1
+          },
+          {
+            "s1": 9,
+            "s2": 4,
+            "winner": 1
+          }
+        ],
+        "winner": {
+          "id": "men_x1772107033861_1",
+          "name": "Cảnh",
+          "rank": 4
+        },
+        "loser": {
+          "id": "men_x1772107033861_2",
+          "name": "Mão",
+          "rank": 5
+        },
+        "nextMatchId": "ms_r2_m1",
+        "nextSlot": "team2"
+      },
+      "ms_r2_m0": {
+        "id": "ms_r2_m0",
+        "type": "ms",
+        "round": "r2",
+        "roundLabel": "Vòng chính",
+        "name": "Vòng tiếp theo (Đơn Nam) Trận 1",
+        "team1": {
+          "id": "men_x1772107039586_0",
+          "name": "Quân",
+          "rank": 11
+        },
+        "team2": {
+          "id": "man2",
+          "name": "Tuấn",
+          "rank": 2
+        },
+        "scores": [
+          {
+            "s1": 3,
+            "s2": 8,
+            "winner": 2
+          },
+          {
+            "s1": 9,
+            "s2": 11,
+            "winner": 2
+          },
+          {
+            "s1": 4,
+            "s2": 11,
+            "winner": 2
+          }
+        ],
+        "winner": {
+          "id": "man2",
+          "name": "Tuấn",
+          "rank": 2
+        },
+        "loser": {
+          "id": "men_x1772107039586_0",
+          "name": "Quân",
+          "rank": 11
+        },
+        "nextMatchId": "ms_r3_m0",
+        "nextSlot": "team1"
+      },
+      "ms_r2_m1": {
+        "id": "ms_r2_m1",
+        "type": "ms",
+        "round": "r2",
+        "roundLabel": "Vòng chính",
+        "name": "Vòng tiếp theo (Đơn Nam) Trận 2",
+        "team1": {
+          "id": "men_x1772107033861_4",
+          "name": "Hoa",
+          "rank": 7
+        },
+        "team2": {
+          "id": "men_x1772107033861_1",
+          "name": "Cảnh",
+          "rank": 4
+        },
+        "scores": [
+          {
+            "s1": 7,
+            "s2": 2,
+            "winner": 1
+          },
+          {
+            "s1": 5,
+            "s2": 7,
+            "winner": 2
+          },
+          {
+            "s1": 2,
+            "s2": 10,
+            "winner": 2
+          },
+          {
+            "s1": 8,
+            "s2": 9,
+            "winner": 2
+          }
+        ],
+        "winner": {
+          "id": "men_x1772107033861_1",
+          "name": "Cảnh",
+          "rank": 4
+        },
+        "loser": {
+          "id": "men_x1772107033861_4",
+          "name": "Hoa",
+          "rank": 7
+        },
+        "nextMatchId": "ms_r3_m0",
+        "nextSlot": "team2"
+      },
+      "ms_r3_m0": {
+        "id": "ms_r3_m0",
+        "type": "ms",
+        "round": "r3",
+        "roundLabel": "Chung kết",
+        "name": "Chung kết (Đơn Nam) Trận 1",
+        "team1": {
+          "id": "man2",
+          "name": "Tuấn",
+          "rank": 2
+        },
+        "team2": {
+          "id": "men_x1772107033861_1",
+          "name": "Cảnh",
+          "rank": 4
+        },
+        "scores": [
+          {
+            "s1": 10,
+            "s2": 0,
+            "winner": 1
+          },
+          {
+            "s1": 9,
+            "s2": 7,
+            "winner": 1
+          },
+          {
+            "s1": 2,
+            "s2": 7,
+            "winner": 2
+          },
+          {
+            "s1": 8,
+            "s2": 6,
+            "winner": 1
+          }
+        ],
+        "winner": {
+          "id": "man2",
+          "name": "Tuấn",
+          "rank": 2
+        },
+        "loser": {
+          "id": "men_x1772107033861_1",
+          "name": "Cảnh",
+          "rank": 4
+        },
+        "nextMatchId": null,
+        "nextSlot": null
+      },
+      "ms_third": {
+        "id": "ms_third",
+        "type": "ms",
+        "round": "third",
+        "roundLabel": "Tranh hạng 3",
+        "name": "Tranh hạng 3 (Đơn Nam)",
+        "team1": {
+          "id": "men_x1772107039586_0",
+          "name": "Quân",
+          "rank": 11
+        },
+        "team2": {
+          "id": "men_x1772107033861_4",
+          "name": "Hoa",
+          "rank": 7
+        },
+        "scores": [
+          {
+            "s1": 6,
+            "s2": 2,
+            "winner": 1
+          },
+          {
+            "s1": 2,
+            "s2": 5,
+            "winner": 2
+          },
+          {
+            "s1": 4,
+            "s2": 1,
+            "winner": 1
+          },
+          {
+            "s1": 6,
+            "s2": 2,
+            "winner": 1
+          }
+        ],
+        "winner": {
+          "id": "men_x1772107039586_0",
+          "name": "Quân",
+          "rank": 11
+        },
+        "loser": {
+          "id": "men_x1772107033861_4",
+          "name": "Hoa",
+          "rank": 7
+        },
+        "nextMatchId": null,
+        "nextSlot": null
+      }
+    }
+  },
+  "mdData": {
+    "rounds": [
+      [
+        "md_r0_m0"
+      ],
+      [
+        "md_r1_m0",
+        "md_r1_m1"
+      ],
+      [
+        "md_r2_m0"
+      ]
+    ],
+    "matches": {
+      "md_r0_m0": {
+        "id": "md_r0_m0",
+        "type": "md",
+        "round": "r0",
+        "roundLabel": "Play-in",
+        "name": "Play-in (Đôi Nam-Nữ) Trận 1",
+        "team1": {
+          "id": "mdteam4",
+          "name": "Đôi 4: Cảnh + Hương",
+          "man": {
+            "id": "men_x1772107033861_1",
+            "name": "Cảnh",
+            "rank": 4
+          },
+          "woman": {
+            "id": "woman2",
+            "name": "Hương",
+            "rank": 2
+          },
+          "rank": 4
+        },
+        "team2": {
+          "id": "mdteam5",
+          "name": "Đôi 5: Mão + Chinh",
+          "man": {
+            "id": "men_x1772107033861_2",
+            "name": "Mão",
+            "rank": 5
+          },
+          "woman": {
+            "id": "woman1",
+            "name": "Chinh",
+            "rank": 1
+          },
+          "rank": 5
+        },
+        "scores": [
+          {
+            "s1": 9,
+            "s2": 0,
+            "winner": 1
+          },
+          {
+            "s1": 3,
+            "s2": 2,
+            "winner": 1
+          },
+          {
+            "s1": 4,
+            "s2": 8,
+            "winner": 2
+          },
+          {
+            "s1": 9,
+            "s2": 7,
+            "winner": 1
+          }
+        ],
+        "winner": {
+          "id": "mdteam4",
+          "name": "Đôi 4: Cảnh + Hương",
+          "man": {
+            "id": "men_x1772107033861_1",
+            "name": "Cảnh",
+            "rank": 4
+          },
+          "woman": {
+            "id": "woman2",
+            "name": "Hương",
+            "rank": 2
+          },
+          "rank": 4
+        },
+        "loser": {
+          "id": "mdteam5",
+          "name": "Đôi 5: Mão + Chinh",
+          "man": {
+            "id": "men_x1772107033861_2",
+            "name": "Mão",
+            "rank": 5
+          },
+          "woman": {
+            "id": "woman1",
+            "name": "Chinh",
+            "rank": 1
+          },
+          "rank": 5
+        },
+        "nextMatchId": "md_r1_m0",
+        "nextSlot": "team2"
+      },
+      "md_r1_m0": {
+        "id": "md_r1_m0",
+        "type": "md",
+        "round": "r1",
+        "roundLabel": "Vòng chính",
+        "name": "Vòng chính (Đôi Nam-Nữ) Trận 1",
+        "team1": {
+          "id": "mdteam1",
+          "name": "Đôi 1: Đào Minh Hiển + Linh",
+          "man": {
+            "id": "man1",
+            "name": "Đào Minh Hiển",
+            "rank": 1
+          },
+          "woman": {
+            "id": "women_x1772107115095_0",
+            "name": "Linh",
+            "rank": 5
+          },
+          "rank": 1
+        },
+        "team2": {
+          "id": "mdteam4",
+          "name": "Đôi 4: Cảnh + Hương",
+          "man": {
+            "id": "men_x1772107033861_1",
+            "name": "Cảnh",
+            "rank": 4
+          },
+          "woman": {
+            "id": "woman2",
+            "name": "Hương",
+            "rank": 2
+          },
+          "rank": 4
+        },
+        "scores": [
+          {
+            "s1": 9,
+            "s2": 11,
+            "winner": 2
+          },
+          {
+            "s1": 8,
+            "s2": 0,
+            "winner": 1
+          },
+          {
+            "s1": 8,
+            "s2": 6,
+            "winner": 1
+          },
+          {
+            "s1": 10,
+            "s2": 11,
+            "winner": 2
+          },
+          {
+            "s1": 7,
+            "s2": 0,
+            "winner": 1
+          }
+        ],
+        "winner": {
+          "id": "mdteam1",
+          "name": "Đôi 1: Đào Minh Hiển + Linh",
+          "man": {
+            "id": "man1",
+            "name": "Đào Minh Hiển",
+            "rank": 1
+          },
+          "woman": {
+            "id": "women_x1772107115095_0",
+            "name": "Linh",
+            "rank": 5
+          },
+          "rank": 1
+        },
+        "loser": {
+          "id": "mdteam4",
+          "name": "Đôi 4: Cảnh + Hương",
+          "man": {
+            "id": "men_x1772107033861_1",
+            "name": "Cảnh",
+            "rank": 4
+          },
+          "woman": {
+            "id": "woman2",
+            "name": "Hương",
+            "rank": 2
+          },
+          "rank": 4
+        },
+        "nextMatchId": "md_r2_m0",
+        "nextSlot": "team1"
+      },
+      "md_r1_m1": {
+        "id": "md_r1_m1",
+        "type": "md",
+        "round": "r1",
+        "roundLabel": "Vòng chính",
+        "name": "Vòng chính (Đôi Nam-Nữ) Trận 2",
+        "team1": {
+          "id": "mdteam2",
+          "name": "Đôi 2: Tuấn + Vy",
+          "man": {
+            "id": "man2",
+            "name": "Tuấn",
+            "rank": 2
+          },
+          "woman": {
+            "id": "woman4",
+            "name": "Vy",
+            "rank": 4
+          },
+          "rank": 2
+        },
+        "team2": {
+          "id": "mdteam3",
+          "name": "Đôi 3: Duy + Thảo",
+          "man": {
+            "id": "men_x1772107033861_0",
+            "name": "Duy",
+            "rank": 3
+          },
+          "woman": {
+            "id": "woman3",
+            "name": "Thảo",
+            "rank": 3
+          },
+          "rank": 3
+        },
+        "scores": [
+          {
+            "s1": 7,
+            "s2": 8,
+            "winner": 2
+          },
+          {
+            "s1": 6,
+            "s2": 11,
+            "winner": 2
+          },
+          {
+            "s1": 8,
+            "s2": 3,
+            "winner": 1
+          },
+          {
+            "s1": 5,
+            "s2": 4,
+            "winner": 1
+          },
+          {
+            "s1": 1,
+            "s2": 2,
+            "winner": 2
+          }
+        ],
+        "winner": {
+          "id": "mdteam3",
+          "name": "Đôi 3: Duy + Thảo",
+          "man": {
+            "id": "men_x1772107033861_0",
+            "name": "Duy",
+            "rank": 3
+          },
+          "woman": {
+            "id": "woman3",
+            "name": "Thảo",
+            "rank": 3
+          },
+          "rank": 3
+        },
+        "loser": {
+          "id": "mdteam2",
+          "name": "Đôi 2: Tuấn + Vy",
+          "man": {
+            "id": "man2",
+            "name": "Tuấn",
+            "rank": 2
+          },
+          "woman": {
+            "id": "woman4",
+            "name": "Vy",
+            "rank": 4
+          },
+          "rank": 2
+        },
+        "nextMatchId": "md_r2_m0",
+        "nextSlot": "team2"
+      },
+      "md_r2_m0": {
+        "id": "md_r2_m0",
+        "type": "md",
+        "round": "r2",
+        "roundLabel": "Chung kết",
+        "name": "Chung kết (Đôi Nam-Nữ) Trận 1",
+        "team1": {
+          "id": "mdteam1",
+          "name": "Đôi 1: Đào Minh Hiển + Linh",
+          "man": {
+            "id": "man1",
+            "name": "Đào Minh Hiển",
+            "rank": 1
+          },
+          "woman": {
+            "id": "women_x1772107115095_0",
+            "name": "Linh",
+            "rank": 5
+          },
+          "rank": 1
+        },
+        "team2": {
+          "id": "mdteam3",
+          "name": "Đôi 3: Duy + Thảo",
+          "man": {
+            "id": "men_x1772107033861_0",
+            "name": "Duy",
+            "rank": 3
+          },
+          "woman": {
+            "id": "woman3",
+            "name": "Thảo",
+            "rank": 3
+          },
+          "rank": 3
+        },
+        "scores": [
+          {
+            "s1": 10,
+            "s2": 11,
+            "winner": 2
+          },
+          {
+            "s1": 3,
+            "s2": 8,
+            "winner": 2
+          },
+          {
+            "s1": 8,
+            "s2": 7,
+            "winner": 1
+          },
+          {
+            "s1": 6,
+            "s2": 8,
+            "winner": 2
+          }
+        ],
+        "winner": {
+          "id": "mdteam3",
+          "name": "Đôi 3: Duy + Thảo",
+          "man": {
+            "id": "men_x1772107033861_0",
+            "name": "Duy",
+            "rank": 3
+          },
+          "woman": {
+            "id": "woman3",
+            "name": "Thảo",
+            "rank": 3
+          },
+          "rank": 3
+        },
+        "loser": {
+          "id": "mdteam1",
+          "name": "Đôi 1: Đào Minh Hiển + Linh",
+          "man": {
+            "id": "man1",
+            "name": "Đào Minh Hiển",
+            "rank": 1
+          },
+          "woman": {
+            "id": "women_x1772107115095_0",
+            "name": "Linh",
+            "rank": 5
+          },
+          "rank": 1
+        },
+        "nextMatchId": null,
+        "nextSlot": null
+      },
+      "md_third": {
+        "id": "md_third",
+        "type": "md",
+        "round": "third",
+        "roundLabel": "Tranh hạng 3",
+        "name": "Tranh hạng 3 (Đôi Nam-Nữ)",
+        "team1": {
+          "id": "mdteam4",
+          "name": "Đôi 4: Cảnh + Hương",
+          "man": {
+            "id": "men_x1772107033861_1",
+            "name": "Cảnh",
+            "rank": 4
+          },
+          "woman": {
+            "id": "woman2",
+            "name": "Hương",
+            "rank": 2
+          },
+          "rank": 4
+        },
+        "team2": {
+          "id": "mdteam2",
+          "name": "Đôi 2: Tuấn + Vy",
+          "man": {
+            "id": "man2",
+            "name": "Tuấn",
+            "rank": 2
+          },
+          "woman": {
+            "id": "woman4",
+            "name": "Vy",
+            "rank": 4
+          },
+          "rank": 2
+        },
+        "scores": [
+          {
+            "s1": 9,
+            "s2": 11,
+            "winner": 2
+          },
+          {
+            "s1": 4,
+            "s2": 11,
+            "winner": 2
+          },
+          {
+            "s1": 11,
+            "s2": 1,
+            "winner": 1
+          },
+          {
+            "s1": 5,
+            "s2": 6,
+            "winner": 2
+          }
+        ],
+        "winner": {
+          "id": "mdteam2",
+          "name": "Đôi 2: Tuấn + Vy",
+          "man": {
+            "id": "man2",
+            "name": "Tuấn",
+            "rank": 2
+          },
+          "woman": {
+            "id": "woman4",
+            "name": "Vy",
+            "rank": 4
+          },
+          "rank": 2
+        },
+        "loser": {
+          "id": "mdteam4",
+          "name": "Đôi 4: Cảnh + Hương",
+          "man": {
+            "id": "men_x1772107033861_1",
+            "name": "Cảnh",
+            "rank": 4
+          },
+          "woman": {
+            "id": "woman2",
+            "name": "Hương",
+            "rank": 2
+          },
+          "rank": 4
+        },
+        "nextMatchId": null,
+        "nextSlot": null
+      }
+    }
+  },
+  "initialized": true
+}
