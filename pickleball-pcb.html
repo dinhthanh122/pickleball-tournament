@@ -978,6 +978,7 @@
                     [otherSide]: normalizedOther
                 };
                 setInputScores(ns);
+                saveMatchScore(matchId, ns, { silent: true });
             };
 
             const adjustScore = (setIdx, side, delta) => {
@@ -1153,7 +1154,7 @@
                                 </button>
                             )}
                             <button
-                                className="btn btn-success text-sm py-1"
+                                className="hidden"
                                 onClick={() => saveMatchScore(matchId, inputScores)}
                             >
                                 Lưu Kết Quả
@@ -2088,7 +2089,8 @@
                 setInitialized(true);
             };
 
-            const saveMatchScore = (matchId, inputScores) => {
+            const saveMatchScore = (matchId, inputScores, options = {}) => {
+                const silent = !!options.silent;
                 const inMs = matchId in msData.matches;
                 const inWs = matchId in wsData.matches;
                 const data = inMs ? msData : (inWs ? wsData : mdData);
@@ -2107,7 +2109,10 @@
                     const s = inputScores[i];
                     if (!s || s.s1 === '' || s.s2 === '') break;
                     const v = validateScore(s.s1, s.s2, pointsToWinSet);
-                    if (!v.valid) { alert(`Set ${i + 1}: ${v.msg}`); return; }
+                    if (!v.valid) {
+                        if (!silent) alert(`Set ${i + 1}: ${v.msg}`);
+                        return;
+                    }
                     if (v.winner === 1) t1w++; else t2w++;
                     scored.push({ s1: parseInt(s.s1), s2: parseInt(s.s2), winner: v.winner });
                     if (t1w === winSetsToWin || t2w === winSetsToWin) break;
