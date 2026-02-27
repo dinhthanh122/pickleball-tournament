@@ -631,31 +631,81 @@
         const INITIAL_PLAYERS = {
             men: [
                 { id: 'man1', name: 'Đào Minh Hiển', rank: 1 },
-                { id: 'man2', name: 'Tuấn', rank: 2 },
+                { id: 'man2', name: 'Phạm Quốc Tuấn', rank: 2 },
                 { id: 'man3', name: 'Nguyễn Khắc Duy', rank: 3 },
-                { id: 'man4', name: 'Quân', rank: 4 },
+                { id: 'man4', name: 'Trần Hồng Quân', rank: 4 },
                 { id: 'man5', name: 'Dương Văn Cảnh', rank: 5 },
                 { id: 'man6', name: 'Trần Văn Mão', rank: 6 },
-                { id: 'man7', name: 'Khôi', rank: 7 },
-                { id: 'man8', name: 'HoaNN', rank: 8 },
-                { id: 'man9', name: 'Cương', rank: 9 },
-                { id: 'man10', name: 'LongDD', rank: 10 },
-                { id: 'man11', name: 'HuyNN', rank: 11 },
+                { id: 'man7', name: 'Hoàng Lê Vy', rank: 7 },
+                { id: 'man8', name: 'Nguyễn Ngọc Hoa', rank: 8 },
+                { id: 'man9', name: 'Phạm Văn Cương', rank: 9 },
+                { id: 'man10', name: 'Đào Đức Long', rank: 10 },
+                { id: 'man11', name: 'Nguyễn Ngọc Huy', rank: 11 },
             ],
             women: [
-                { id: 'woman1', name: 'Tuyết Chinh', rank: 1 },
-                { id: 'woman2', name: 'Chị Hường', rank: 2 },
-                { id: 'woman3', name: 'Chị Thảo', rank: 3 },
-                { id: 'woman4', name: 'Vy Nguyễn', rank: 4 },
+                { id: 'woman1', name: 'Nguyễn Thị Tuyết Chinh', rank: 1 },
+                { id: 'woman2', name: 'Vũ Thị Vân Hường', rank: 2 },
+                { id: 'woman3', name: 'Nguyễn Phương Thảo', rank: 3 },
+                { id: 'woman4', name: 'Hoàng Lê Vy', rank: 4 },
                 { id: 'woman5', name: 'Giang Thùy Linh', rank: 5 },
             ],
         };
 
+        const SKILL_LEVELS = [
+            { value: 1, label: 'Chuyên nghiệp' },
+            { value: 2, label: 'Giỏi' },
+            { value: 3, label: 'Bình thường' },
+            { value: 4, label: 'Yếu' },
+            { value: 5, label: 'Chơi cho vui' },
+        ];
+
+        const rankToLabel = (rank) => {
+            const lv = SKILL_LEVELS.find(x => x.value === rank);
+            return lv ? lv.label : SKILL_LEVELS[2].label;
+        };
+
+        const normalizeRank = (rawRank) => {
+            const r = parseInt(rawRank);
+            if (isNaN(r) || r < 1) return 3;
+            if (r <= 5) return r;
+            if (r <= 7) return 3;
+            if (r <= 9) return 4;
+            return 5;
+        };
+
+        const normalizePlayers = (src) => {
+            if (!src?.men || !src?.women) return INITIAL_PLAYERS;
+            const fixList = (list, cat) => list.map((p, i) => ({
+                id: p?.id || `${cat}_x${Date.now()}_${i}`,
+                name: p?.name || '',
+                rank: normalizeRank(p?.rank)
+            }));
+            return {
+                men: fixList(src.men, 'men'),
+                women: fixList(src.women, 'women')
+            };
+        };
+
+        const normalizeWinSetsToWin = (value) => {
+            const n = parseInt(value);
+            if (isNaN(n)) return 3;
+            return Math.min(5, Math.max(1, n));
+        };
+
+        const normalizePointsToWinSet = (value) => {
+            const n = parseInt(value);
+            if (isNaN(n)) return 11;
+            return Math.min(50, Math.max(1, n));
+        };
+
         // ─── Scoring & Validation ────────────────────────────────────────────────
-        const validateScore = (s1, s2) => {
+        const validateScore = (s1, s2, pointsToWinSet = 0) => {
             const v1 = parseInt(s1), v2 = parseInt(s2);
             if (isNaN(v1) || isNaN(v2) || v1 < 0 || v2 < 0) return { valid: false, msg: 'Điểm phải là số dương (>= 0)!' };
             if (v1 === v2) return { valid: false, msg: 'Set đấu phải có người thắng (điểm không được bằng nhau)!' };
+            if (pointsToWinSet > 0 && v1 < pointsToWinSet && v2 < pointsToWinSet) {
+                return { valid: false, msg: `Set chưa kết thúc: một bên phải chạm ${pointsToWinSet} điểm.` };
+            }
             return { valid: true, winner: v1 > v2 ? 1 : 2 };
         };
 
@@ -854,14 +904,16 @@
 
         // ─── MatchScoreCard Component ─────────────────────────────────────────────
         // ─── MatchScoreCard Component ─────────────────────────────────────────────
-        const MatchScoreCard = ({ matchId, match, saveMatchScore }) => {
-            const MAX_SETS = 5;                      // best-of-5
-            const WIN_SETS = Math.floor(MAX_SETS / 2) + 1; // =3
+        const MatchScoreCard = ({ matchId, match, saveMatchScore, winSetsToWin, pointsToWinSet }) => {
+            const WIN_SETS = normalizeWinSetsToWin(winSetsToWin);
+            const POINTS_TO_WIN_SET = normalizePointsToWinSet(pointsToWinSet);
+            const MAX_SETS = WIN_SETS * 2 - 1;
 
             const emptySetArr = () =>
                 Array.from({ length: MAX_SETS }, () => ({ s1: "", s2: "" }));
 
             const [inputScores, setInputScores] = useState(emptySetArr());
+            const [visibleSetCount, setVisibleSetCount] = useState(1);
 
             useEffect(() => {
                 if (match?.scores?.length > 0) {
@@ -873,7 +925,12 @@
                 } else {
                     setInputScores(emptySetArr());
                 }
-            }, [match?.scores, matchId]);
+                const played = match?.scores?.length || 0;
+                const nextVisible = match?.winner
+                    ? Math.max(played, 1)
+                    : Math.max(1, Math.min(played + 1, MAX_SETS));
+                setVisibleSetCount(nextVisible);
+            }, [match?.scores, matchId, MAX_SETS]);
 
             // Chưa đủ đội → show placeholder
             if (!match?.team1 || !match?.team2) {
@@ -887,27 +944,34 @@
             }
 
             const handleChange = (setIdx, side, val) => {
+                const sanitizeScoreValue = (raw) => {
+                    if (raw === "") return "";
+                    const n = parseInt(raw, 10);
+                    if (isNaN(n)) return "";
+                    return String(Math.max(0, n));
+                };
                 const ns = [...inputScores];
-                ns[setIdx] = { ...ns[setIdx], [side]: val };
+                const nextVal = sanitizeScoreValue(val);
+                const otherSide = side === "s1" ? "s2" : "s1";
+                const currentOther = ns[setIdx]?.[otherSide];
+                const normalizedOther = (currentOther === "" || currentOther === undefined || currentOther === null) ? "0" : currentOther;
+                ns[setIdx] = {
+                    ...ns[setIdx],
+                    [side]: nextVal,
+                    [otherSide]: normalizedOther
+                };
                 setInputScores(ns);
             };
 
-            // ====== TÍNH SỐ SET CẦN HIỂN THỊ (nở dần) ======
-            // Tìm set đầu tiên chưa nhập đủ
-            const firstEmptyIdx = inputScores.findIndex(
-                (s) => s.s1 === "" || s.s2 === ""
-            );
-            const filledCount = firstEmptyIdx === -1 ? MAX_SETS : firstEmptyIdx;
+            const adjustScore = (setIdx, side, delta) => {
+                if (match.winner) return;
+                const current = parseInt(inputScores[setIdx]?.[side], 10);
+                const base = isNaN(current) ? 0 : current;
+                const next = Math.max(0, base + delta);
+                handleChange(setIdx, side, String(next));
+            };
 
-            const played = match?.scores?.length || 0;
-
-            // Nếu đã có winner -> show đúng số set đã chơi
-            // Nếu chưa -> show (đã nhập + 1) để nhập tiếp
-            const showCount = match.winner
-                ? Math.max(played, 1)
-                : Math.min(filledCount + 1, MAX_SETS);
-
-            const visibleSetIdx = Array.from({ length: showCount }, (_, i) => i);
+            const visibleSetIdx = Array.from({ length: visibleSetCount }, (_, i) => i);
 
             // Optional: hiển thị trạng thái đang thắng bao nhiêu set (nhìn nhanh)
             const calcCurrentSetWins = () => {
@@ -915,7 +979,7 @@
                 for (let i = 0; i < MAX_SETS; i++) {
                     const s = inputScores[i];
                     if (!s || s.s1 === "" || s.s2 === "") break;
-                    const v = validateScore(s.s1, s.s2);
+                    const v = validateScore(s.s1, s.s2, POINTS_TO_WIN_SET);
                     if (!v.valid) break;
                     if (v.winner === 1) a++;
                     if (v.winner === 2) b++;
@@ -925,6 +989,35 @@
             };
 
             const w = !match.winner ? calcCurrentSetWins() : null;
+            const handleAddSet = () => {
+                if (visibleSetCount >= MAX_SETS) return;
+                const lastIdx = visibleSetCount - 1;
+                const lastSet = inputScores[lastIdx];
+                const s1 = parseInt(String(lastSet?.s1 ?? "").trim(), 10);
+                const s2 = parseInt(String(lastSet?.s2 ?? "").trim(), 10);
+                if (isNaN(s1) || isNaN(s2)) {
+                    alert(`Vui lòng nhập đủ điểm Set ${lastIdx + 1} trước khi thêm set mới.`);
+                    return;
+                }
+                const check = validateScore(s1, s2, POINTS_TO_WIN_SET);
+                if (!check.valid) {
+                    alert(`Set ${lastIdx + 1}: ${check.msg}`);
+                    return;
+                }
+                setVisibleSetCount(v => Math.min(MAX_SETS, v + 1));
+            };
+            const finalSetSummary = (() => {
+                if (!match?.scores || match.scores.length === 0) return null;
+                let a = 0, b = 0;
+                match.scores.forEach((s) => {
+                    const s1 = parseInt(s?.s1);
+                    const s2 = parseInt(s?.s2);
+                    if (isNaN(s1) || isNaN(s2) || s1 === s2) return;
+                    if (s1 > s2) a++; else b++;
+                });
+                if (a === 0 && b === 0) return null;
+                return `${a}-${b}`;
+            })();
 
             return (
                 <div
@@ -937,9 +1030,16 @@
                         </div>
                     )}
 
-                    <h4 className="font-bold text-accent mb-3 text-sm border-b border-glass-border pb-2">
-                        {match.name}
-                    </h4>
+                    <div className="mb-3 pb-2 border-b border-glass-border flex items-center justify-between gap-2">
+                        <h4 className="font-bold text-accent text-sm">
+                            {match.name}
+                        </h4>
+                        {finalSetSummary && (
+                            <span className="px-2 py-0.5 rounded bg-white/10 text-white border border-white/15 text-[11px] font-semibold">
+                                KQ: {finalSetSummary}
+                            </span>
+                        )}
+                    </div>
 
                     {!match.winner && (
                         <div className="text-xs text-gray-300 mb-2">
@@ -960,15 +1060,64 @@
 
                                 <div className="flex gap-1 flex-wrap">
                                     {visibleSetIdx.map((si) => (
-                                        <input
-                                            key={si}
-                                            type="number"
-                                            className="score-input"
-                                            value={inputScores[si][side]}
-                                            onChange={(e) => handleChange(si, side, e.target.value)}
-                                            disabled={!!match.winner}
-                                            placeholder="-"
-                                        />
+                                        (() => {
+                                            const setObj = inputScores[si] || { s1: "", s2: "" };
+                                            const s1 = parseInt(String(setObj.s1 ?? "").trim(), 10);
+                                            const s2 = parseInt(String(setObj.s2 ?? "").trim(), 10);
+                                            const isSetCompleted = !isNaN(s1) && !isNaN(s2) && validateScore(s1, s2, POINTS_TO_WIN_SET).valid;
+                                            const showQuickButtons = !match.winner && !isSetCompleted;
+
+                                            if (!showQuickButtons) {
+                                                return (
+                                                    <div key={si} className="flex items-center gap-1">
+                                                        <input
+                                                            type="number"
+                                                            className="score-input"
+                                                            value={inputScores[si][side]}
+                                                            readOnly
+                                                            disabled
+                                                            placeholder="0"
+                                                        />
+                                                    </div>
+                                                );
+                                            }
+
+                                            return (
+                                                <div key={si} className="flex items-center gap-1">
+                                                    <button
+                                                        type="button"
+                                                        className="w-7 h-7 rounded bg-white/10 border border-glass-border text-white font-bold disabled:opacity-40"
+                                                        onClick={() => adjustScore(si, side, -1)}
+                                                        disabled={!!match.winner}
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <input
+                                                        type="number"
+                                                        min="0"
+                                                        step="1"
+                                                        className="score-input"
+                                                        value={inputScores[si][side]}
+                                                        onChange={(e) => handleChange(si, side, e.target.value)}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+') {
+                                                                e.preventDefault();
+                                                            }
+                                                        }}
+                                                        disabled={!!match.winner}
+                                                        placeholder="0"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        className="w-7 h-7 rounded bg-white/10 border border-glass-border text-white font-bold disabled:opacity-40"
+                                                        onClick={() => adjustScore(si, side, 1)}
+                                                        disabled={!!match.winner}
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            );
+                                        })()
                                     ))}
                                 </div>
                             </div>
@@ -976,7 +1125,16 @@
                     )}
 
                     {!match.winner && (
-                        <div className="mt-3 flex justify-end">
+                        <div className="mt-3 flex justify-end gap-2">
+                            {visibleSetCount < MAX_SETS && w && w.a < WIN_SETS && w.b < WIN_SETS && (
+                                <button
+                                    type="button"
+                                    className="btn btn-ghost text-sm py-1"
+                                    onClick={handleAddSet}
+                                >
+                                    + Thêm set
+                                </button>
+                            )}
                             <button
                                 className="btn btn-success text-sm py-1"
                                 onClick={() => saveMatchScore(matchId, inputScores)}
@@ -990,7 +1148,7 @@
         };
 
         // ─── SetupTab (Unified Management) ───────────────────────────────────────
-        const SetupTab = ({ players, mdTeams, initialized, handlePlayerCountChange, handlePlayerChange, initializeTournament, msData, mdData }) => {
+        const SetupTab = ({ players, mdTeams, initialized, handlePlayerCountChange, handlePlayerChange, initializeTournament, msData, mdData, matchConfig, setMatchConfig }) => {
             const renderFramedMatch = (m) => {
                 if (!m || m.isBye || !m.team1 || !m.team2) return null;
                 const isWinner1 = m.winner?.id === m.team1.id;
@@ -1029,7 +1187,41 @@
                         <h2 className="text-xl font-bold mb-1 text-primary flex items-center gap-2">
                             <span>📝</span> Đăng Ký VĐV
                         </h2>
-                        <p className="text-sm text-text-muted mb-5">Nhập danh sách và sức mạnh (Rank) để hệ thống tự động bốc thăm hạt giống.</p>
+                        <p className="text-sm text-text-muted mb-5">Nhập danh sách và sức mạnh để hệ thống tự động bốc thăm hạt giống.</p>
+
+                        <div className="mb-5 flex flex-wrap items-center gap-4">
+                            <div className="flex items-center gap-3">
+                                <span className="text-sm font-bold text-text-muted">Số set thắng để kết thúc trận:</span>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max="5"
+                                    className="glass-input w-20 text-center text-lg font-black text-primary border-primary/50"
+                                    value={normalizeWinSetsToWin(matchConfig?.winSetsToWin)}
+                                    onChange={e => setMatchConfig(prev => ({
+                                        ...prev,
+                                        winSetsToWin: normalizeWinSetsToWin(e.target.value)
+                                    }))}
+                                />
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="text-sm font-bold text-text-muted">Điểm chạm thắng 1 set:</span>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max="50"
+                                    className="glass-input w-24 text-center text-lg font-black text-accent border-accent/50"
+                                    value={normalizePointsToWinSet(matchConfig?.pointsToWinSet)}
+                                    onChange={e => setMatchConfig(prev => ({
+                                        ...prev,
+                                        pointsToWinSet: normalizePointsToWinSet(e.target.value)
+                                    }))}
+                                />
+                            </div>
+                            <span className="text-xs text-text-muted italic">
+                                Thể thức: BO{normalizeWinSetsToWin(matchConfig?.winSetsToWin) * 2 - 1}, set chạm {normalizePointsToWinSet(matchConfig?.pointsToWinSet)}.
+                            </span>
+                        </div>
 
                         <div className="grid md:grid-cols-2 gap-8">
                             {/* Men */}
@@ -1051,8 +1243,12 @@
                                         <div key={p.id} className="flex gap-2 animate-fade-in" style={{ animationDelay: `${i * 0.05}s` }}>
                                             <input className="glass-input flex-1 text-sm" placeholder={`Tên Nam ${i + 1}`}
                                                 value={p.name} onChange={e => handlePlayerChange('men', i, 'name', e.target.value)} />
-                                            <input className="glass-input w-20 text-center text-sm" type="number" min="1" placeholder="Rank"
-                                                value={p.rank} onChange={e => handlePlayerChange('men', i, 'rank', e.target.value)} />
+                                            <select className="glass-input w-44 text-sm"
+                                                value={normalizeRank(p.rank)} onChange={e => handlePlayerChange('men', i, 'rank', e.target.value)}>
+                                                {SKILL_LEVELS.map(level => (
+                                                    <option key={level.value} value={level.value}>{level.label}</option>
+                                                ))}
+                                            </select>
                                         </div>
                                     ))}
                                 </div>
@@ -1076,8 +1272,12 @@
                                         <div key={p.id} className="flex gap-2 animate-fade-in" style={{ animationDelay: `${i * 0.05}s` }}>
                                             <input className="glass-input flex-1 text-sm" placeholder={`Tên Nữ ${i + 1}`}
                                                 value={p.name} onChange={e => handlePlayerChange('women', i, 'name', e.target.value)} />
-                                            <input className="glass-input w-20 text-center text-sm" type="number" min="1" placeholder="Rank"
-                                                value={p.rank} onChange={e => handlePlayerChange('women', i, 'rank', e.target.value)} />
+                                            <select className="glass-input w-44 text-sm"
+                                                value={normalizeRank(p.rank)} onChange={e => handlePlayerChange('women', i, 'rank', e.target.value)}>
+                                                {SKILL_LEVELS.map(level => (
+                                                    <option key={level.value} value={level.value}>{level.label}</option>
+                                                ))}
+                                            </select>
                                         </div>
                                     ))}
                                 </div>
@@ -1086,9 +1286,9 @@
 
                         <div className="mt-8 flex flex-col items-center gap-3">
                             <button className="btn btn-primary px-12 py-4 text-lg shadow-[0_0_30px_rgba(59,130,246,0.3)]" onClick={initializeTournament}>
-                                🚀 KHỞI TẠO GIẢI ĐẤU TOÀN DIỆN
+                                🚀 BỐC THĂM
                             </button>
-                            <p className="text-xs text-text-muted italic">Cập nhật toàn bộ Bracket & Lịch thi đấu theo dữ liệu mới</p>
+                            <p className="text-xs text-text-muted italic">Thực hiện bốc thăm chia cặp đấu</p>
                         </div>
                     </div>
 
@@ -1154,7 +1354,7 @@
         // ScoringTab and BracketTab components remain separate for clarity
 
         // ─── ScoringTab ───────────────────────────────────────────────────────────
-        const ScoringTab = ({ msData, mdData, saveMatchScore }) => {
+        const ScoringTab = ({ msData, mdData, saveMatchScore, matchConfig }) => {
             const renderSection = (title, subtitle, data, accentClass) => {
                 const rounds = data?.rounds || [];
                 const matches = data?.matches || {};
@@ -1229,6 +1429,8 @@
                                                     matchId={m.id}
                                                     match={m}
                                                     saveMatchScore={saveMatchScore}
+                                                    winSetsToWin={matchConfig?.winSetsToWin}
+                                                    pointsToWinSet={matchConfig?.pointsToWinSet}
                                                 />
                                             ))}
                                         </div>
@@ -1272,6 +1474,21 @@
 
         // ─── BracketTab ───────────────────────────────────────────────────────────
         const BracketTab = ({ msData, mdData }) => {
+            const getMatchSetSummary = (match) => {
+                if (!match?.scores || match.scores.length === 0) return null;
+                let t1Wins = 0;
+                let t2Wins = 0;
+                match.scores.forEach(s => {
+                    const s1 = parseInt(s?.s1);
+                    const s2 = parseInt(s?.s2);
+                    if (isNaN(s1) || isNaN(s2) || s1 === s2) return;
+                    if (s1 > s2) t1Wins++;
+                    else t2Wins++;
+                });
+                if (t1Wins === 0 && t2Wins === 0) return null;
+                return `${t1Wins}-${t2Wins}`;
+            };
+
             const renderBracket = (data, title, color) => {
                 const { rounds, matches } = data;
                 if (!rounds || rounds.length === 0) return null;
@@ -1302,10 +1519,16 @@
                                                 </div>
                                                 {(() => {
                                                     const m = matches[thirdId];
+                                                    const scoreSummary = getMatchSetSummary(m);
                                                     return (
                                                         <div className="bracket-match-card rounded-xl overflow-hidden shadow-2xl min-w-[200px] border border-yellow-500/20">
-                                                            <div className="px-3 py-1.5 bg-yellow-500/10 text-[9px] text-yellow-400 font-bold border-b border-white/5 uppercase">
+                                                            <div className="px-3 py-1.5 bg-yellow-500/10 text-[9px] text-yellow-400 font-bold border-b border-white/5 uppercase flex items-center justify-between">
                                                                 Trận Tranh Giải 3
+                                                                {scoreSummary && (
+                                                                    <span className="px-2 py-0.5 rounded bg-yellow-400/20 text-yellow-300 border border-yellow-400/30 normal-case">
+                                                                        KQ: {scoreSummary}
+                                                                    </span>
+                                                                )}
                                                             </div>
                                                             {[m.team1, m.team2].map((team, ti) => (
                                                                 <div key={ti} className={`px-4 py-2.5 flex justify-between items-center ${ti === 0 ? 'border-b border-white/5' : ''} ${team && m.winner?.id === team.id ? 'bg-yellow-500/10' : ''}`}>
@@ -1336,13 +1559,31 @@
                                                 {visibleIds.map((id, mi) => {
                                                     const m = matches[id];
                                                     const hasNext = !!m.nextMatchId && matches[m.nextMatchId];
+                                                    const scoreSummary = getMatchSetSummary(m);
+                                                    const siblingId = hasNext
+                                                        ? visibleIds.find(otherId =>
+                                                            otherId !== id &&
+                                                            matches[otherId] &&
+                                                            matches[otherId].nextMatchId === m.nextMatchId
+                                                        )
+                                                        : null;
+                                                    const hasSibling = !!siblingId;
+                                                    const siblingIndex = hasSibling ? visibleIds.indexOf(siblingId) : -1;
+                                                    const isUpperSibling = hasSibling && mi < siblingIndex;
 
                                                     return (
                                                         <div key={id} className="relative flex items-center">
                                                             {/* Match Card */}
                                                             <div className="bracket-match-card rounded-xl overflow-hidden shadow-2xl min-w-[200px] border border-white/5">
                                                                 <div className="px-3 py-1.5 bg-white/5 text-[9px] text-text-muted font-bold border-b border-white/5 flex justify-between items-center uppercase">
+                                                                    <div className="flex items-center gap-2">
                                                                     <span>{ri === rounds.length - 1 ? 'Chung Kết' : `Trận ${mi + 1}`}</span>
+                                                                        {scoreSummary && (
+                                                                            <span className="px-2 py-0.5 rounded bg-white/10 text-white border border-white/15 normal-case">
+                                                                                KQ: {scoreSummary}
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
                                                                     {m.winner && <span className="text-success text-[8px] animate-pulse">● Kết Thúc</span>}
                                                                 </div>
                                                                 {[m.team1, m.team2].map((team, ti) => {
@@ -1371,19 +1612,27 @@
                                                                     <div className="connector-line connector-horizontal"
                                                                         style={{ right: '-32px', width: '32px', top: '50%' }}></div>
 
-                                                                    {/* Vertical line up/down */}
-                                                                    {mi % 2 === 0 ? (
-                                                                        <div className="connector-line connector-vertical"
-                                                                            style={{ right: '-32px', top: '50%', height: 'calc(50% + 15px)' }}></div>
-                                                                    ) : (
-                                                                        <div className="connector-line connector-vertical"
-                                                                            style={{ right: '-32px', bottom: '50%', height: 'calc(50% + 15px)' }}></div>
+                                                                    {/* For true sibling pairs, draw elbow into shared next slot. */}
+                                                                    {hasSibling && (
+                                                                        <>
+                                                                            <div className="connector-line connector-vertical"
+                                                                                style={{
+                                                                                    right: '-32px',
+                                                                                    height: 'calc(50% + 16px)',
+                                                                                    ...(isUpperSibling ? { top: '50%' } : { bottom: '50%' })
+                                                                                }}></div>
+
+                                                                            {isUpperSibling && (
+                                                                                <div className="connector-line connector-horizontal"
+                                                                                    style={{ right: '-64px', width: '32px', top: 'calc(100% + 16px)' }}></div>
+                                                                            )}
+                                                                        </>
                                                                     )}
 
-                                                                    {/* Horizontal line into next round (only for even matches to cover the pair) */}
-                                                                    {mi % 2 === 0 && (
+                                                                    {/* For single-source advancement (no sibling), draw direct line. */}
+                                                                    {!hasSibling && (
                                                                         <div className="connector-line connector-horizontal"
-                                                                            style={{ right: '-64px', width: '32px', top: 'calc(50% + 50% + 15px)' }}></div>
+                                                                            style={{ right: '-64px', width: '64px', top: '50%' }}></div>
                                                                     )}
                                                                 </>
                                                             )}
@@ -1528,9 +1777,10 @@
             const [password, setPassword] = useState('');
             const [showPasswordModal, setShowPasswordModal] = useState(false);
 
-            const [players, setPlayers] = useState(INITIAL_PLAYERS);
+            const [players, setPlayers] = useState(normalizePlayers(INITIAL_PLAYERS));
             const [mdTeams, setMdTeams] = useState([]);
             const [initialized, setInitialized] = useState(false);
+            const [matchConfig, setMatchConfig] = useState({ winSetsToWin: 3, pointsToWinSet: 11 });
 
             const [msData, setMsData] = useState({ rounds: [], matches: {} });
             const [mdData, setMdData] = useState({ rounds: [], matches: {} });
@@ -1541,11 +1791,15 @@
                     .then(d => {
                         if (!d) return;
                         const lp = d.players;
-                        if (lp?.men && lp?.women) setPlayers(lp);
+                        if (lp?.men && lp?.women) setPlayers(normalizePlayers(lp));
                         if (d.mdTeams) setMdTeams(d.mdTeams);
                         if (d.msData) setMsData(d.msData);
                         if (d.mdData) setMdData(d.mdData);
                         if (d.initialized) setInitialized(d.initialized);
+                        if (d.matchConfig) setMatchConfig({
+                            winSetsToWin: normalizeWinSetsToWin(d.matchConfig.winSetsToWin),
+                            pointsToWinSet: normalizePointsToWinSet(d.matchConfig.pointsToWinSet)
+                        });
                     })
                     .catch(() => { });
             }, []);
@@ -1554,7 +1808,7 @@
             const generateTxt = () => {
                 let txt = 'BÁO CÁO KẾT QUẢ GIẢI ĐẤU Pickleball PCB\n=================================\n\n';
                 txt += '=== DANH SÁCH VĐV NAM ===\n';
-                players.men.filter(p => p.name).forEach((p, i) => { txt += `${i + 1}. ${p.name} (Sức mạnh: ${p.rank})\n`; });
+                players.men.filter(p => p.name).forEach((p, i) => { txt += `${i + 1}. ${p.name} (Sức mạnh: ${rankToLabel(normalizeRank(p.rank))})\n`; });
                 txt += '\n=== CÁC CẶP ĐÔI NAM-Nữ ===\n';
                 mdTeams.forEach(t => { txt += `${t.name}\n`; });
                 txt += '\n=== KẾT QUẢ TRẬN ĐẤU ===\n';
@@ -1578,14 +1832,14 @@
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                                state: { players, mdTeams, msData, mdData, initialized },
+                                state: { players, mdTeams, msData, mdData, initialized, matchConfig },
                                 txtReport: generateTxt()
                             })
                         });
                     } catch (e) { }
                 }, 1500);
                 return () => clearTimeout(timerRef.current);
-            }, [players, mdTeams, msData, mdData, initialized]);
+            }, [players, mdTeams, msData, mdData, initialized, matchConfig]);
 
             const handlePlayerCountChange = (cat, val) => {
                 const n = Math.max(2, parseInt(val) || 2);
@@ -1593,7 +1847,7 @@
                     const list = prev[cat];
                     if (n > list.length) {
                         const added = Array(n - list.length).fill(null).map((_, i) => ({
-                            id: `${cat}_x${Date.now()}_${i}`, name: '', rank: list.length + i + 1
+                            id: `${cat}_x${Date.now()}_${i}`, name: '', rank: 3
                         }));
                         return { ...prev, [cat]: [...list, ...added] };
                     }
@@ -1604,7 +1858,7 @@
             const handlePlayerChange = (cat, idx, field, val) => {
                 setPlayers(prev => {
                     const list = [...prev[cat]];
-                    list[idx] = { ...list[idx], [field]: field === 'rank' ? (parseInt(val) || 0) : val };
+                    list[idx] = { ...list[idx], [field]: field === 'rank' ? normalizeRank(val) : val };
                     return { ...prev, [cat]: list };
                 });
             };
@@ -1630,6 +1884,9 @@
                 const inMs = matchId in msData.matches;
                 const data = inMs ? msData : mdData;
                 const setData = inMs ? setMsData : setMdData;
+                const winSetsToWin = normalizeWinSetsToWin(matchConfig?.winSetsToWin);
+                const pointsToWinSet = normalizePointsToWinSet(matchConfig?.pointsToWinSet);
+                const maxSets = winSetsToWin * 2 - 1;
 
                 const matches = JSON.parse(JSON.stringify(data.matches));
                 const match = matches[matchId];
@@ -1637,20 +1894,20 @@
 
                 let t1w = 0, t2w = 0;
                 const scored = [];
-                for (let i = 0; i < 5; i++) {
+                for (let i = 0; i < maxSets; i++) {
                     const s = inputScores[i];
                     if (!s || s.s1 === '' || s.s2 === '') break;
-                    const v = validateScore(s.s1, s.s2);
+                    const v = validateScore(s.s1, s.s2, pointsToWinSet);
                     if (!v.valid) { alert(`Set ${i + 1}: ${v.msg}`); return; }
                     if (v.winner === 1) t1w++; else t2w++;
                     scored.push({ s1: parseInt(s.s1), s2: parseInt(s.s2), winner: v.winner });
-                    if (t1w === 3 || t2w === 3) break;
+                    if (t1w === winSetsToWin || t2w === winSetsToWin) break;
                 }
 
                 match.scores = scored;
-                if (t1w === 3 || t2w === 3) {
-                    match.winner = t1w === 3 ? match.team1 : match.team2;
-                    match.loser = t1w === 3 ? match.team2 : match.team1;
+                if (t1w === winSetsToWin || t2w === winSetsToWin) {
+                    match.winner = t1w === winSetsToWin ? match.team1 : match.team2;
+                    match.loser = t1w === winSetsToWin ? match.team2 : match.team1;
 
                     if (match.nextMatchId && matches[match.nextMatchId]) {
                         matches[match.nextMatchId][match.nextSlot] = match.winner;
@@ -1673,6 +1930,8 @@
             };
 
             const simulateTournament = () => {
+                const winSetsToWin = normalizeWinSetsToWin(matchConfig?.winSetsToWin);
+                const pointsToWinSet = normalizePointsToWinSet(matchConfig?.pointsToWinSet);
                 if (!initialized) { alert('Vui lòng khởi tạo giải đấu trước!'); return; }
                 const runSim = (data, setter) => {
                     const matches = JSON.parse(JSON.stringify(data.matches));
@@ -1683,13 +1942,18 @@
                             const m = matches[id];
                             if (m.isBye || m.winner || !m.team1 || !m.team2) return;
                             const scores = []; let w1 = 0, w2 = 0;
-                            while (w1 < 3 && w2 < 3) {
-                                const s1 = Math.floor(Math.random() * 12), s2 = Math.floor(Math.random() * 12);
-                                if (s1 === s2) continue;
-                                scores.push({ s1, s2, winner: s1 > s2 ? 1 : 2 });
-                                if (s1 > s2) w1++; else w2++;
+                            while (w1 < winSetsToWin && w2 < winSetsToWin) {
+                                const winner = Math.random() < 0.5 ? 1 : 2;
+                                const winnerScore = pointsToWinSet + Math.floor(Math.random() * 3);
+                                const loserScore = Math.floor(Math.random() * winnerScore);
+                                const s1 = winner === 1 ? winnerScore : loserScore;
+                                const s2 = winner === 2 ? winnerScore : loserScore;
+                                const v = validateScore(s1, s2, pointsToWinSet);
+                                if (!v.valid) continue;
+                                scores.push({ s1, s2, winner: v.winner });
+                                if (v.winner === 1) w1++; else w2++;
                             }
-                            m.scores = scores; m.winner = w1 === 3 ? m.team1 : m.team2; m.loser = w1 === 3 ? m.team2 : m.team1;
+                            m.scores = scores; m.winner = w1 === winSetsToWin ? m.team1 : m.team2; m.loser = w1 === winSetsToWin ? m.team2 : m.team1;
                             if (m.nextMatchId && matches[m.nextMatchId]) matches[m.nextMatchId][m.nextSlot] = m.winner;
                             const thirdId = Object.keys(matches).find(k => matches[k].round === 'third');
                             if (thirdId) {
@@ -1707,7 +1971,7 @@
 
             const exportData = () => {
                 const a = document.createElement('a');
-                a.href = URL.createObjectURL(new Blob([JSON.stringify({ players, mdTeams, msData, mdData, initialized }, null, 2)], { type: 'application/json' }));
+                a.href = URL.createObjectURL(new Blob([JSON.stringify({ players, mdTeams, msData, mdData, initialized, matchConfig }, null, 2)], { type: 'application/json' }));
                 a.download = 'Pickleball PCB-data.json'; a.click();
             };
             const importData = () => {
@@ -1717,11 +1981,15 @@
                     fr.onload = ev => {
                         try {
                             const d = JSON.parse(ev.target.result);
-                            if (d.players) setPlayers(d.players);
+                            if (d.players) setPlayers(normalizePlayers(d.players));
                             if (d.mdTeams) setMdTeams(d.mdTeams);
                             if (d.msData) setMsData(d.msData);
                             if (d.mdData) setMdData(d.mdData);
                             if (d.initialized !== undefined) setInitialized(d.initialized);
+                            if (d.matchConfig) setMatchConfig({
+                                winSetsToWin: normalizeWinSetsToWin(d.matchConfig.winSetsToWin),
+                                pointsToWinSet: normalizePointsToWinSet(d.matchConfig.pointsToWinSet)
+                            });
                             alert('Đã khôi phục dữ liệu!');
                         } catch { alert('File JSON lỗi!'); }
                     };
@@ -1731,13 +1999,14 @@
             };
             const resetAll = () => {
                 if (!confirm('Xác nhận xóa toàn bộ dữ liệu?')) return;
-                setPlayers(INITIAL_PLAYERS); setMdTeams([]);
+                setPlayers(normalizePlayers(INITIAL_PLAYERS)); setMdTeams([]);
                 setMsData({ rounds: [], matches: {} }); setMdData({ rounds: [], matches: {} });
+                setMatchConfig({ winSetsToWin: 3, pointsToWinSet: 11 });
                 setInitialized(false);
             };
 
             const handleLogin = () => {
-                if (password === 'PCB2026') {
+                if (password === '1234') {
                     setRole('admin');
                     setViewMode('admin');
                     setActiveTab('setup');
@@ -1814,7 +2083,7 @@
                             </button>
                             <div>
                                 <h1 className="text-2xl font-bold">Pickleball PCB Manager</h1>
-                                <p className="text-sm text-text-muted">Giải Đấu Pickleball PCB – Dynamic Bracket</p>
+                                <p className="text-sm text-text-muted">Giải Đấu Pickleball PCB mùa xuân</p>
                             </div>
                         </div>
                         <div className="flex gap-2 bg-slate-800/50 p-2 rounded-lg border border-glass-border flex-wrap">
@@ -1859,8 +2128,8 @@
                             </div>
                         ) : (
                             <>
-                                {activeTab === 'setup' && <SetupTab players={players} mdTeams={mdTeams} initialized={initialized} handlePlayerCountChange={handlePlayerCountChange} handlePlayerChange={handlePlayerChange} initializeTournament={initializeTournament} msData={msData} mdData={mdData} />}
-                                {activeTab === 'scoring' && <ScoringTab msData={msData} mdData={mdData} saveMatchScore={saveMatchScore} />}
+                                {activeTab === 'setup' && <SetupTab players={players} mdTeams={mdTeams} initialized={initialized} handlePlayerCountChange={handlePlayerCountChange} handlePlayerChange={handlePlayerChange} initializeTournament={initializeTournament} msData={msData} mdData={mdData} matchConfig={matchConfig} setMatchConfig={setMatchConfig} />}
+                                {activeTab === 'scoring' && <ScoringTab msData={msData} mdData={mdData} saveMatchScore={saveMatchScore} matchConfig={matchConfig} />}
                                 {activeTab === 'bracket' && <BracketTab msData={msData} mdData={mdData} />}
                                 {activeTab === 'podium' && <PodiumTab msData={msData} mdData={mdData} />}
                             </>
@@ -1876,3 +2145,4 @@
 </body>
 
 </html>
+
