@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 const DATA_FILE = path.join(__dirname, 'badminton-data.json');
 const TXT_FILE = path.join(__dirname, 'KetQua_GiaiCauLong.txt');
 
@@ -13,6 +13,7 @@ app.use(express.json({ limit: '10mb' }));
 
 // Serve static frontend (including pickleball-pcb.html) from project root
 app.use(express.static(__dirname));
+app.get("/", (req,res)=>res.sendFile(path.join(__dirname,"pickleball-pcb.html")));
 
 // 1. Get current data
 app.get('/api/data', (req, res) => {
@@ -53,3 +54,4 @@ app.listen(PORT, () => {
     console.log(`Will save data to: ${DATA_FILE}`);
     console.log(`Will save TXT report to: ${TXT_FILE}`);
 });
+
