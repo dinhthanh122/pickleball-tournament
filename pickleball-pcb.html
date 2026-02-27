@@ -636,7 +636,6 @@
                 { id: 'man4', name: 'Trần Hồng Quân', rank: 4 },
                 { id: 'man5', name: 'Dương Văn Cảnh', rank: 5 },
                 { id: 'man6', name: 'Trần Văn Mão', rank: 6 },
-                { id: 'man7', name: 'Hoàng Lê Vy', rank: 7 },
                 { id: 'man8', name: 'Nguyễn Ngọc Hoa', rank: 8 },
                 { id: 'man9', name: 'Phạm Văn Cương', rank: 9 },
                 { id: 'man10', name: 'Đào Đức Long', rank: 10 },
@@ -1166,7 +1165,7 @@
         };
 
         // ─── SetupTab (Unified Management) ───────────────────────────────────────
-        const SetupTab = ({ players, mdTeams, initialized, handlePlayerCountChange, handlePlayerChange, initializeTournament, msData, mdData, matchConfig, setMatchConfig }) => {
+        const SetupTab = ({ players, mdTeams, initialized, handlePlayerCountChange, handlePlayerChange, handleAddPlayerRow, handleRemovePlayerRow, initializeTournament, mdParticipants, toggleMdParticipant, selectAllMdParticipants, clearAllMdParticipants, msData, wsData, mdData, matchConfig, setMatchConfig }) => {
             const renderFramedMatch = (m) => {
                 if (!m || m.isBye || !m.team1 || !m.team2) return null;
                 const isWinner1 = m.winner?.id === m.team1.id;
@@ -1197,6 +1196,11 @@
                     </div>
                 );
             };
+
+            const activeMen = players.men.filter(p => p.name.trim());
+            const activeWomen = players.women.filter(p => p.name.trim());
+            const selectedMenIds = mdParticipants?.men || activeMen.map(p => p.id);
+            const selectedWomenIds = mdParticipants?.women || activeWomen.map(p => p.id);
 
             return (
                 <div className="space-y-8 animate-fade-in pb-10">
@@ -1251,9 +1255,16 @@
                                     </h3>
                                     <div className="flex items-center gap-3">
                                         <span className="text-sm font-bold text-text-muted">Số lượng:</span>
-                                        <input type="number" min="2" className="glass-input w-24 text-center py-3 text-2xl font-black text-primary border-primary/50"
+                                        <input type="number" min="0" className="glass-input w-24 text-center py-3 text-2xl font-black text-primary border-primary/50"
                                             value={players.men.length}
                                             onChange={e => handlePlayerCountChange('men', e.target.value)} />
+                                        <button
+                                            type="button"
+                                            className="btn btn-ghost text-xs py-2 px-3"
+                                            onClick={() => handleAddPlayerRow('men')}
+                                        >
+                                            + Thêm dòng
+                                        </button>
                                     </div>
                                 </div>
                                 <div className="max-h-[300px] overflow-y-auto pr-2 space-y-2">
@@ -1267,6 +1278,13 @@
                                                     <option key={level.value} value={level.value}>{level.label}</option>
                                                 ))}
                                             </select>
+                                            <button
+                                                type="button"
+                                                className="btn btn-ghost text-xs py-2 px-3 text-red-300"
+                                                onClick={() => handleRemovePlayerRow('men', i)}
+                                            >
+                                                Xóa
+                                            </button>
                                         </div>
                                     ))}
                                 </div>
@@ -1280,9 +1298,16 @@
                                     </h3>
                                     <div className="flex items-center gap-3">
                                         <span className="text-sm font-bold text-text-muted">Số lượng:</span>
-                                        <input type="number" min="2" className="glass-input w-24 text-center py-3 text-2xl font-black text-accent border-accent/50"
+                                        <input type="number" min="0" className="glass-input w-24 text-center py-3 text-2xl font-black text-accent border-accent/50"
                                             value={players.women.length}
                                             onChange={e => handlePlayerCountChange('women', e.target.value)} />
+                                        <button
+                                            type="button"
+                                            className="btn btn-ghost text-xs py-2 px-3"
+                                            onClick={() => handleAddPlayerRow('women')}
+                                        >
+                                            + Thêm dòng
+                                        </button>
                                     </div>
                                 </div>
                                 <div className="max-h-[300px] overflow-y-auto pr-2 space-y-2">
@@ -1296,8 +1321,67 @@
                                                     <option key={level.value} value={level.value}>{level.label}</option>
                                                 ))}
                                             </select>
+                                            <button
+                                                type="button"
+                                                className="btn btn-ghost text-xs py-2 px-3 text-red-300"
+                                                onClick={() => handleRemovePlayerRow('women', i)}
+                                            >
+                                                Xóa
+                                            </button>
                                         </div>
                                     ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-8 glass-panel p-5 bg-purple-500/5 border border-purple-500/20">
+                            <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+                                <h3 className="text-lg font-bold text-purple-300 flex items-center gap-2">
+                                    <span>🧩</span> Cấu hình danh sách tham gia Đôi Nam-Nữ
+                                </h3>
+                                <div className="flex gap-2">
+                                    <button className="btn btn-ghost text-xs py-1 px-3" onClick={selectAllMdParticipants}>Chọn hết</button>
+                                    <button className="btn btn-ghost text-xs py-1 px-3" onClick={clearAllMdParticipants}>Bỏ chọn hết</button>
+                                </div>
+                            </div>
+                            <p className="text-xs text-text-muted mb-4">
+                                Lịch đôi nam-nữ sẽ bốc từ danh sách đã chọn bên dưới.
+                                Đang chọn: {selectedMenIds.length} Nam, {selectedWomenIds.length} Nữ.
+                            </p>
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 className="text-sm font-bold text-blue-300 mb-2">Nam tham gia đôi</h4>
+                                    <div className="max-h-[180px] overflow-y-auto pr-2 space-y-2">
+                                        {activeMen.map(p => (
+                                            <label key={`mdp_m_${p.id}`} className="flex items-center gap-2 text-sm text-gray-200">
+                                                <input
+                                                    type="checkbox"
+                                                    className="accent-blue-500"
+                                                    checked={selectedMenIds.includes(p.id)}
+                                                    onChange={() => toggleMdParticipant('men', p.id)}
+                                                />
+                                                <span>{p.name}</span>
+                                            </label>
+                                        ))}
+                                        {activeMen.length === 0 && <p className="text-xs italic text-text-muted">Chưa có VĐV Nam.</p>}
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 className="text-sm font-bold text-purple-300 mb-2">Nữ tham gia đôi</h4>
+                                    <div className="max-h-[180px] overflow-y-auto pr-2 space-y-2">
+                                        {activeWomen.map(p => (
+                                            <label key={`mdp_w_${p.id}`} className="flex items-center gap-2 text-sm text-gray-200">
+                                                <input
+                                                    type="checkbox"
+                                                    className="accent-purple-500"
+                                                    checked={selectedWomenIds.includes(p.id)}
+                                                    onChange={() => toggleMdParticipant('women', p.id)}
+                                                />
+                                                <span>{p.name}</span>
+                                            </label>
+                                        ))}
+                                        {activeWomen.length === 0 && <p className="text-xs italic text-text-muted">Chưa có VĐV Nữ.</p>}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1319,7 +1403,7 @@
                                 <span className="px-3 py-1 bg-success/20 text-success text-xs font-bold rounded-full border border-success/30">✓ Đã bốc thăm</span>
                             </div>
 
-                            <div className="grid lg:grid-cols-2 gap-8">
+                            <div className="grid lg:grid-cols-3 gap-8">
                                 {/* Men's Singles Column */}
                                 <div className="glass-panel p-5 bg-blue-500/5 border border-blue-500/10">
                                     <div className="flex items-center justify-between mb-5 border-b border-blue-500/20 pb-3">
@@ -1335,6 +1419,29 @@
                                             })
                                             .map(renderFramedMatch)}
                                         {Object.values(msData.matches || {}).filter(m => !m.isBye && m.team1 && m.team2).length === 0 &&
+                                            <p className="text-sm italic text-text-muted text-center py-10">Đang chờ xác định các cặp đấu...</p>
+                                        }
+                                    </div>
+                                </div>
+
+                                {/* Women's Singles Column */}
+                                <div className="glass-panel p-5 bg-pink-500/5 border border-pink-500/10">
+                                    <div className="flex items-center justify-between mb-5 border-b border-pink-500/20 pb-3">
+                                        <h3 className="text-lg font-bold text-pink-400 flex items-center gap-2">
+                                            <span>👩</span> Đơn Nữ (Women's Singles)
+                                        </h3>
+                                        <span className="text-[10px] bg-pink-500/20 px-2 py-0.5 rounded text-pink-300">DYNAMICS</span>
+                                    </div>
+                                    <div className="space-y-4">
+                                        {Object.values(wsData.matches || {})
+                                            .filter(m => !m.isBye && m.team1 && m.team2)
+                                            .sort((a, b) => {
+                                                const sA = a.round === 'third' ? 998 : (a.roundLabel === 'Chung kết' ? 999 : parseInt(a.round.slice(1)) || 0);
+                                                const sB = b.round === 'third' ? 998 : (b.roundLabel === 'Chung kết' ? 999 : parseInt(b.round.slice(1)) || 0);
+                                                return sA - sB;
+                                            })
+                                            .map(renderFramedMatch)}
+                                        {Object.values(wsData.matches || {}).filter(m => !m.isBye && m.team1 && m.team2).length === 0 &&
                                             <p className="text-sm italic text-text-muted text-center py-10">Đang chờ xác định các cặp đấu...</p>
                                         }
                                     </div>
@@ -1372,7 +1479,7 @@
         // ScoringTab and BracketTab components remain separate for clarity
 
         // ─── ScoringTab ───────────────────────────────────────────────────────────
-        const ScoringTab = ({ msData, mdData, saveMatchScore, matchConfig }) => {
+        const ScoringTab = ({ msData, wsData, mdData, saveMatchScore, matchConfig }) => {
             const renderSection = (title, subtitle, data, accentClass) => {
                 const rounds = data?.rounds || [];
                 const matches = data?.matches || {};
@@ -1480,6 +1587,12 @@
                             'text-blue-400'
                         )}
                         {renderSection(
+                            'Đơn Nữ (Women\'s Singles)',
+                            'Nhập điểm cho các trận Đơn Nữ.',
+                            wsData,
+                            'text-pink-400'
+                        )}
+                        {renderSection(
                             'Đôi Nam-Nữ (Mixed Doubles)',
                             'Nhập điểm cho các trận Đôi Nam-Nữ.',
                             mdData,
@@ -1491,7 +1604,7 @@
         };
 
         // ─── BracketTab ───────────────────────────────────────────────────────────
-        const BracketTab = ({ msData, mdData }) => {
+        const BracketTab = ({ msData, wsData, mdData }) => {
             const getMatchSetSummary = (match) => {
                 if (!match?.scores || match.scores.length === 0) return null;
                 let t1Wins = 0;
@@ -1588,32 +1701,33 @@
                                                     const hasSibling = !!siblingId;
                                                     const siblingIndex = hasSibling ? visibleIds.indexOf(siblingId) : -1;
                                                     const isUpperSibling = hasSibling && mi < siblingIndex;
+                                                    const isFinalMatch = ri === rounds.length - 1;
 
                                                     return (
                                                         <div key={id} className="relative flex items-center">
                                                             {/* Match Card */}
-                                                            <div className="bracket-match-card rounded-xl overflow-hidden shadow-2xl min-w-[200px] border border-white/5">
-                                                                <div className="px-3 py-1.5 bg-white/5 text-[9px] text-text-muted font-bold border-b border-white/5 flex justify-between items-center uppercase">
+                                                            <div className={`bracket-match-card rounded-xl overflow-hidden min-w-[200px] ${isFinalMatch ? 'border border-yellow-400/50 shadow-[0_0_30px_rgba(250,204,21,0.25)]' : 'shadow-2xl border border-white/5'}`}>
+                                                                <div className={`px-3 py-1.5 text-[9px] font-bold border-b flex justify-between items-center uppercase ${isFinalMatch ? 'bg-gradient-to-r from-yellow-400/30 via-amber-300/20 to-yellow-200/30 text-yellow-100 border-yellow-300/40' : 'bg-white/5 text-text-muted border-white/5'}`}>
                                                                     <div className="flex items-center gap-2">
                                                                     <span>{ri === rounds.length - 1 ? 'Chung Kết' : `Trận ${mi + 1}`}</span>
                                                                         {scoreSummary && (
-                                                                            <span className="px-2 py-0.5 rounded bg-white/10 text-white border border-white/15 normal-case">
+                                                                            <span className={`px-2 py-0.5 rounded normal-case ${isFinalMatch ? 'bg-yellow-300/30 text-yellow-50 border border-yellow-200/50' : 'bg-white/10 text-white border border-white/15'}`}>
                                                                                 KQ: {scoreSummary}
                                                                             </span>
                                                                         )}
                                                                     </div>
-                                                                    {m.winner && <span className="text-success text-[8px] animate-pulse">● Kết Thúc</span>}
+                                                                    {m.winner && <span className={`text-[8px] animate-pulse ${isFinalMatch ? 'text-yellow-200' : 'text-success'}`}>● Kết Thúc</span>}
                                                                 </div>
                                                                 {[m.team1, m.team2].map((team, ti) => {
                                                                     const isWinner = team && m.winner?.id === team.id;
                                                                     return (
-                                                                        <div key={ti} className={`px-4 py-2.5 flex justify-between items-center ${ti === 0 ? 'border-b border-white/5' : ''} ${isWinner ? 'bg-success/10' : ''}`}>
-                                                                            <span className={`text-sm break-words whitespace-normal leading-tight max-w-[140px] ${isWinner ? 'text-white font-bold' : 'text-gray-400'}`}>
+                                                                        <div key={ti} className={`px-4 py-2.5 flex justify-between items-center ${ti === 0 ? (isFinalMatch ? 'border-b border-yellow-200/20' : 'border-b border-white/5') : ''} ${isWinner ? (isFinalMatch ? 'bg-yellow-300/15' : 'bg-success/10') : ''}`}>
+                                                                            <span className={`text-sm break-words whitespace-normal leading-tight max-w-[140px] ${isWinner ? (isFinalMatch ? 'text-yellow-50 font-bold' : 'text-white font-bold') : (isFinalMatch ? 'text-gray-200' : 'text-gray-400')}`}>
                                                                                 {team?.name || 'TBA'}
                                                                             </span>
                                                                             <div className="flex gap-1">
                                                                                 {m.scores?.map((s, si) => (
-                                                                                    <span key={si} className={`score-box-vibrant ${isWinner ? 'bg-success/20 text-success' : ''}`}>
+                                                                                    <span key={si} className={`score-box-vibrant ${isWinner ? (isFinalMatch ? 'bg-yellow-300/30 text-yellow-50 border border-yellow-200/40' : 'bg-success/20 text-success') : ''}`}>
                                                                                         {ti === 0 ? s.s1 : s.s2}
                                                                                     </span>
                                                                                 ))}
@@ -1680,13 +1794,14 @@
                         <div className="h-px flex-1 bg-gradient-to-r from-glass-border to-transparent"></div>
                     </div>
                     {renderBracket(msData, 'Đơn Nam', 'text-primary')}
+                    {renderBracket(wsData, 'Đơn Nữ', 'text-pink-400')}
                     {renderBracket(mdData, 'Đôi Nam-Nữ', 'text-accent')}
                 </div>
             );
         };
 
         // ─── PodiumTab ────────────────────────────────────────────────────────────
-        const PodiumTab = ({ msData, mdData }) => {
+        const PodiumTab = ({ msData, wsData, mdData }) => {
             const getRankings = (data) => {
                 const results = { rank1: null, rank2: null, rank3: null, rank4: null };
                 const matches = data.matches || {};
@@ -1757,6 +1872,7 @@
                         <div className="h-px flex-1 bg-gradient-to-r from-glass-border to-transparent"></div>
                     </div>
                     {renderPodium('Đơn Nam (Men\'s Singles)', msData, 'pickleball')}
+                    {renderPodium('Đơn Nữ (Women\'s Singles)', wsData, '👩')}
                     {renderPodium('Đôi Nam-Nữ (Mixed Doubles)', mdData, '🤝')}
 
                     {/* Legend Section */}
@@ -1797,11 +1913,13 @@
 
             const [players, setPlayers] = useState(normalizePlayers(INITIAL_PLAYERS));
             const [mdTeams, setMdTeams] = useState([]);
+            const [mdParticipants, setMdParticipants] = useState(null); // null = all active players
             const [initialized, setInitialized] = useState(false);
             const [matchConfig, setMatchConfig] = useState({ winSetsToWin: 3, pointsToWinSet: 11 });
             const [hasLoadedInitialData, setHasLoadedInitialData] = useState(false);
 
             const [msData, setMsData] = useState({ rounds: [], matches: {} });
+            const [wsData, setWsData] = useState({ rounds: [], matches: {} });
             const [mdData, setMdData] = useState({ rounds: [], matches: {} });
 
             useEffect(() => {
@@ -1812,7 +1930,9 @@
                         const lp = d.players;
                         if (lp?.men && lp?.women) setPlayers(normalizePlayers(lp));
                         if (d.mdTeams) setMdTeams(d.mdTeams);
+                        if (d.mdParticipants) setMdParticipants(d.mdParticipants);
                         if (d.msData) setMsData(d.msData);
+                        if (d.wsData) setWsData(d.wsData);
                         if (d.mdData) setMdData(d.mdData);
                         if (d.initialized !== undefined) setInitialized(d.initialized);
                         if (d.matchConfig) setMatchConfig({
@@ -1832,7 +1952,7 @@
                 txt += '\n=== CÁC CẶP ĐÔI NAM-Nữ ===\n';
                 mdTeams.forEach(t => { txt += `${t.name}\n`; });
                 txt += '\n=== KẾT QUẢ TRẬN ĐẤU ===\n';
-                const allMatches = { ...msData.matches, ...mdData.matches };
+                const allMatches = { ...msData.matches, ...wsData.matches, ...mdData.matches };
                 Object.values(allMatches).forEach(m => {
                     if (m.isBye) return;
                     if (!m.team1 || !m.team2) return;
@@ -1853,17 +1973,55 @@
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                                state: { players, mdTeams, msData, mdData, initialized, matchConfig },
+                                state: { players, mdTeams, mdParticipants, msData, wsData, mdData, initialized, matchConfig },
                                 txtReport: generateTxt()
                             })
                         });
                     } catch (e) { }
                 }, 1500);
                 return () => clearTimeout(timerRef.current);
-            }, [players, mdTeams, msData, mdData, initialized, matchConfig, hasLoadedInitialData]);
+            }, [players, mdTeams, mdParticipants, msData, wsData, mdData, initialized, matchConfig, hasLoadedInitialData]);
+
+            useEffect(() => {
+                if (!mdParticipants) return;
+                const activeMenIds = players.men.filter(p => p.name.trim()).map(p => p.id);
+                const activeWomenIds = players.women.filter(p => p.name.trim()).map(p => p.id);
+                setMdParticipants(prev => {
+                    if (!prev) return prev;
+                    const next = {
+                        men: prev.men.filter(id => activeMenIds.includes(id)),
+                        women: prev.women.filter(id => activeWomenIds.includes(id))
+                    };
+                    if (next.men.length === prev.men.length && next.women.length === prev.women.length) return prev;
+                    return next;
+                });
+            }, [players, mdParticipants]);
+
+            const getDefaultMdParticipants = () => ({
+                men: players.men.filter(p => p.name.trim()).map(p => p.id),
+                women: players.women.filter(p => p.name.trim()).map(p => p.id)
+            });
+
+            const toggleMdParticipant = (cat, id) => {
+                setMdParticipants(prev => {
+                    const base = prev || getDefaultMdParticipants();
+                    const current = new Set(base[cat] || []);
+                    if (current.has(id)) current.delete(id);
+                    else current.add(id);
+                    return { ...base, [cat]: [...current] };
+                });
+            };
+
+            const selectAllMdParticipants = () => {
+                setMdParticipants(getDefaultMdParticipants());
+            };
+
+            const clearAllMdParticipants = () => {
+                setMdParticipants({ men: [], women: [] });
+            };
 
             const handlePlayerCountChange = (cat, val) => {
-                const n = Math.max(2, parseInt(val) || 2);
+                const n = Math.max(0, parseInt(val) || 0);
                 setPlayers(prev => {
                     const list = prev[cat];
                     if (n > list.length) {
@@ -1873,6 +2031,24 @@
                         return { ...prev, [cat]: [...list, ...added] };
                     }
                     return { ...prev, [cat]: list.slice(0, n) };
+                });
+            };
+
+            const handleAddPlayerRow = (cat) => {
+                setPlayers(prev => ({
+                    ...prev,
+                    [cat]: [
+                        ...prev[cat],
+                        { id: `${cat}_x${Date.now()}_${Math.random().toString(36).slice(2, 8)}`, name: '', rank: 3 }
+                    ]
+                }));
+            };
+
+            const handleRemovePlayerRow = (cat, idx) => {
+                setPlayers(prev => {
+                    const list = prev[cat];
+                    if (idx < 0 || idx >= list.length) return prev;
+                    return { ...prev, [cat]: list.filter((_, i) => i !== idx) };
                 });
             };
 
@@ -1892,8 +2068,19 @@
 
                 const ms = buildBracket(activeMen, 'ms', 'Đơn Nam');
                 setMsData(ms);
+                const ws = buildBracket(activeWomen, 'ws', 'Đơn Nữ');
+                setWsData(ws);
 
-                const teams = buildMdTeams(activeMen, activeWomen);
+                const defaultMd = getDefaultMdParticipants();
+                const selectedMen = new Set((mdParticipants?.men && mdParticipants.men.length > 0) ? mdParticipants.men : defaultMd.men);
+                const selectedWomen = new Set((mdParticipants?.women && mdParticipants.women.length > 0) ? mdParticipants.women : defaultMd.women);
+                const activeMdMen = activeMen.filter(p => selectedMen.has(p.id));
+                const activeMdWomen = activeWomen.filter(p => selectedWomen.has(p.id));
+
+                if (activeMdMen.length < 2) { alert('Danh sách tham gia đôi nam-nữ cần ít nhất 2 VĐV Nam!'); return; }
+                if (activeMdWomen.length < 2) { alert('Danh sách tham gia đôi nam-nữ cần ít nhất 2 VĐV Nữ!'); return; }
+
+                const teams = buildMdTeams(activeMdMen, activeMdWomen);
                 setMdTeams(teams);
                 const md = buildBracket(teams, 'md', 'Đôi Nam-Nữ');
                 setMdData(md);
@@ -1903,8 +2090,9 @@
 
             const saveMatchScore = (matchId, inputScores) => {
                 const inMs = matchId in msData.matches;
-                const data = inMs ? msData : mdData;
-                const setData = inMs ? setMsData : setMdData;
+                const inWs = matchId in wsData.matches;
+                const data = inMs ? msData : (inWs ? wsData : mdData);
+                const setData = inMs ? setMsData : (inWs ? setWsData : setMdData);
                 const winSetsToWin = normalizeWinSetsToWin(matchConfig?.winSetsToWin);
                 const pointsToWinSet = normalizePointsToWinSet(matchConfig?.pointsToWinSet);
                 const maxSets = winSetsToWin * 2 - 1;
@@ -1987,12 +2175,12 @@
                     }
                     if (changed) setter(prev => ({ ...prev, matches }));
                 };
-                runSim(msData, setMsData); runSim(mdData, setMdData);
+                runSim(msData, setMsData); runSim(wsData, setWsData); runSim(mdData, setMdData);
             };
 
             const exportData = () => {
                 const a = document.createElement('a');
-                a.href = URL.createObjectURL(new Blob([JSON.stringify({ players, mdTeams, msData, mdData, initialized, matchConfig }, null, 2)], { type: 'application/json' }));
+                a.href = URL.createObjectURL(new Blob([JSON.stringify({ players, mdTeams, mdParticipants, msData, wsData, mdData, initialized, matchConfig }, null, 2)], { type: 'application/json' }));
                 a.download = 'Pickleball PCB-data.json'; a.click();
             };
             const importData = () => {
@@ -2004,7 +2192,11 @@
                             const d = JSON.parse(ev.target.result);
                             if (d.players) setPlayers(normalizePlayers(d.players));
                             if (d.mdTeams) setMdTeams(d.mdTeams);
+                            if (d.mdParticipants) setMdParticipants(d.mdParticipants);
+                            else setMdParticipants(null);
                             if (d.msData) setMsData(d.msData);
+                            if (d.wsData) setWsData(d.wsData);
+                            else setWsData({ rounds: [], matches: {} });
                             if (d.mdData) setMdData(d.mdData);
                             if (d.initialized !== undefined) setInitialized(d.initialized);
                             if (d.matchConfig) setMatchConfig({
@@ -2021,7 +2213,8 @@
             const resetAll = () => {
                 if (!confirm('Xác nhận xóa toàn bộ dữ liệu?')) return;
                 setPlayers(normalizePlayers(INITIAL_PLAYERS)); setMdTeams([]);
-                setMsData({ rounds: [], matches: {} }); setMdData({ rounds: [], matches: {} });
+                setMdParticipants(null);
+                setMsData({ rounds: [], matches: {} }); setWsData({ rounds: [], matches: {} }); setMdData({ rounds: [], matches: {} });
                 setMatchConfig({ winSetsToWin: 3, pointsToWinSet: 11 });
                 setInitialized(false);
             };
@@ -2066,10 +2259,10 @@
                                 <button onClick={() => { setRole('public'); setViewMode('public'); setActiveTab('bracket'); }}
                                     className="glass-panel p-8 w-full text-left transition-all hover:scale-[1.02] hover:bg-white/10 group border-l-4 border-accent">
                                     <div className="flex items-center justify-between mb-2">
-                                        <span className="text-2xl font-bold text-white group-hover:text-accent">📺 Public View</span>
+                                        <span className="text-2xl font-bold text-white group-hover:text-accent">📺 Người xem</span>
                                         <span className="text-gray-500">→</span>
                                     </div>
-                                    <p className="text-sm text-gray-400">Dành cho khán giả: Xem lịch thi đấu, Bracket và Bảng vàng thành tích.</p>
+                                    <p className="text-sm text-gray-400">Dành cho khán giả: Xem lịch thi đấu, kết quả và Bảng vàng thành tích.</p>
                                 </button>
                             </div>
                         </div>
@@ -2144,15 +2337,15 @@
                     <div className="min-h-[60vh]">
                         {viewMode === 'public' ? (
                             <div className="space-y-12">
-                                <PodiumTab msData={msData} mdData={mdData} />
-                                <BracketTab msData={msData} mdData={mdData} />
+                                <PodiumTab msData={msData} wsData={wsData} mdData={mdData} />
+                                <BracketTab msData={msData} wsData={wsData} mdData={mdData} />
                             </div>
                         ) : (
                             <>
-                                {activeTab === 'setup' && <SetupTab players={players} mdTeams={mdTeams} initialized={initialized} handlePlayerCountChange={handlePlayerCountChange} handlePlayerChange={handlePlayerChange} initializeTournament={initializeTournament} msData={msData} mdData={mdData} matchConfig={matchConfig} setMatchConfig={setMatchConfig} />}
-                                {activeTab === 'scoring' && <ScoringTab msData={msData} mdData={mdData} saveMatchScore={saveMatchScore} matchConfig={matchConfig} />}
-                                {activeTab === 'bracket' && <BracketTab msData={msData} mdData={mdData} />}
-                                {activeTab === 'podium' && <PodiumTab msData={msData} mdData={mdData} />}
+                                {activeTab === 'setup' && <SetupTab players={players} mdTeams={mdTeams} initialized={initialized} handlePlayerCountChange={handlePlayerCountChange} handlePlayerChange={handlePlayerChange} handleAddPlayerRow={handleAddPlayerRow} handleRemovePlayerRow={handleRemovePlayerRow} initializeTournament={initializeTournament} mdParticipants={mdParticipants} toggleMdParticipant={toggleMdParticipant} selectAllMdParticipants={selectAllMdParticipants} clearAllMdParticipants={clearAllMdParticipants} msData={msData} wsData={wsData} mdData={mdData} matchConfig={matchConfig} setMatchConfig={setMatchConfig} />}
+                                {activeTab === 'scoring' && <ScoringTab msData={msData} wsData={wsData} mdData={mdData} saveMatchScore={saveMatchScore} matchConfig={matchConfig} />}
+                                {activeTab === 'bracket' && <BracketTab msData={msData} wsData={wsData} mdData={mdData} />}
+                                {activeTab === 'podium' && <PodiumTab msData={msData} wsData={wsData} mdData={mdData} />}
                             </>
                         )}
                     </div>
