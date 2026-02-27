@@ -1805,7 +1805,7 @@
             const [mdData, setMdData] = useState({ rounds: [], matches: {} });
 
             useEffect(() => {
-                fetch('http://localhost:3001/api/data')
+                fetch('/api/data')
                     .then(r => r.json())
                     .then(d => {
                         if (!d) return;
@@ -1849,7 +1849,7 @@
                 if (timerRef.current) clearTimeout(timerRef.current);
                 timerRef.current = setTimeout(async () => {
                     try {
-                        await fetch('http://localhost:3001/api/save', {
+                        await fetch('/api/save', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({

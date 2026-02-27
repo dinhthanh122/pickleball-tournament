@@ -5,8 +5,13 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const DATA_FILE = path.join(__dirname, 'badminton-data.json');
-const TXT_FILE = path.join(__dirname, 'KetQua_GiaiCauLong.txt');
+const DATA_DIR = process.env.DATA_DIR || __dirname;
+const DATA_FILE = path.join(DATA_DIR, 'badminton-data.json');
+const TXT_FILE = path.join(DATA_DIR, 'KetQua_GiaiCauLong.txt');
+
+if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+}
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
@@ -54,4 +59,3 @@ app.listen(PORT, () => {
     console.log(`Will save data to: ${DATA_FILE}`);
     console.log(`Will save TXT report to: ${TXT_FILE}`);
 });
-
