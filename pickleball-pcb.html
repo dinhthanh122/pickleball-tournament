@@ -698,6 +698,24 @@
             return Math.min(50, Math.max(1, n));
         };
 
+        const shuffleArray = (arr) => {
+            const out = [...arr];
+            for (let i = out.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [out[i], out[j]] = [out[j], out[i]];
+            }
+            return out;
+        };
+
+        // Keep skill ordering by rank, but randomize fairly inside same-rank groups.
+        const sortByRankWithRandomTies = (list) => {
+            const shuffled = shuffleArray(list);
+            return shuffled
+                .map((player, randomOrder) => ({ player, randomOrder }))
+                .sort((a, b) => (a.player.rank - b.player.rank) || (a.randomOrder - b.randomOrder))
+                .map(x => x.player);
+        };
+
         // ─── Scoring & Validation ────────────────────────────────────────────────
         const validateScore = (s1, s2, pointsToWinSet = 0) => {
             const v1 = parseInt(s1), v2 = parseInt(s2);
@@ -713,7 +731,7 @@
             const n = players.length;
             if (n < 2) return { rounds: [], matches: {} };
 
-            const seeded = [...players].sort((a, b) => a.rank - b.rank);
+            const seeded = sortByRankWithRandomTies(players);
 
             let M = 1;
             while (M < n) M <<= 1;
@@ -886,8 +904,8 @@
 
         // ─── Mixed Doubles Team Builder ───────────────────────────────────────────
         const buildMdTeams = (men, women) => {
-            const sortedMen = [...men].sort((a, b) => a.rank - b.rank);
-            const sortedWomen = [...women].sort((a, b) => a.rank - b.rank);
+            const sortedMen = sortByRankWithRandomTies(men);
+            const sortedWomen = sortByRankWithRandomTies(women);
             const numTeams = sortedWomen.length;
             const teams = [];
             for (let i = 0; i < numTeams; i++) {
@@ -1781,6 +1799,7 @@
             const [mdTeams, setMdTeams] = useState([]);
             const [initialized, setInitialized] = useState(false);
             const [matchConfig, setMatchConfig] = useState({ winSetsToWin: 3, pointsToWinSet: 11 });
+            const [hasLoadedInitialData, setHasLoadedInitialData] = useState(false);
 
             const [msData, setMsData] = useState({ rounds: [], matches: {} });
             const [mdData, setMdData] = useState({ rounds: [], matches: {} });
@@ -1795,13 +1814,14 @@
                         if (d.mdTeams) setMdTeams(d.mdTeams);
                         if (d.msData) setMsData(d.msData);
                         if (d.mdData) setMdData(d.mdData);
-                        if (d.initialized) setInitialized(d.initialized);
+                        if (d.initialized !== undefined) setInitialized(d.initialized);
                         if (d.matchConfig) setMatchConfig({
                             winSetsToWin: normalizeWinSetsToWin(d.matchConfig.winSetsToWin),
                             pointsToWinSet: normalizePointsToWinSet(d.matchConfig.pointsToWinSet)
                         });
                     })
-                    .catch(() => { });
+                    .catch(() => { })
+                    .finally(() => setHasLoadedInitialData(true));
             }, []);
 
             const timerRef = useRef(null);
@@ -1825,6 +1845,7 @@
             };
 
             useEffect(() => {
+                if (!hasLoadedInitialData) return;
                 if (timerRef.current) clearTimeout(timerRef.current);
                 timerRef.current = setTimeout(async () => {
                     try {
@@ -1839,7 +1860,7 @@
                     } catch (e) { }
                 }, 1500);
                 return () => clearTimeout(timerRef.current);
-            }, [players, mdTeams, msData, mdData, initialized, matchConfig]);
+            }, [players, mdTeams, msData, mdData, initialized, matchConfig, hasLoadedInitialData]);
 
             const handlePlayerCountChange = (cat, val) => {
                 const n = Math.max(2, parseInt(val) || 2);
